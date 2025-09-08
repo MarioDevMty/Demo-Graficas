@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación - Plataforma de Funciones</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos específicos para la página de evaluación */
+        #reto-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        #reto-chart, #user-chart {
+            margin-bottom: 20px;
+        }
+
+        #reto-message {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+
+        /* Estilos para la barra de navegación de retos */
+        #reto-nav {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #reto-nav a {
+            padding: 8px 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        #reto-nav a.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        #reto-nav a.completed {
+            background-color: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        #reto-nav a.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-dots">
+        <ul>
+            <li><a href="index.html">1</a></li>
+            <li><a href="teoria.html">2</a></li>
+            <li><a href="grafico.html">3</a></li>
+            <li><a href="aplicacion.html" class="active">4</a></li>
+            <li><a href="evaluacion.html">5</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="content-page">
+            <h2>Evaluación - Adivina la Gráfica</h2>
+            <p>Usa los bloques para crear la función que corresponde a la gráfica que se muestra. Cuando creas que es correcta, presiona "Evaluar".</p>
+
+            <div id="reto-nav"></div>
+            <h3 id="reto-title"></h3>
+
+            <div id="reto-container">
+                <div id="reto-chart" style="width: 400px; height: 400px;"></div>
+                <div id="reto-message"></div>
+                
+                <div id="blocklyDiv" style="height: 400px; width: 100%;"></div>
+                
+                <button onclick="evaluarReto()">Evaluar</button>
+            </div>
+            
+            <div id="user-chart-container" style="display: none;">
+                <h3>Tu Gráfica:</h3>
+                <div id="user-chart" style="width: 400px; height: 400px;"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="./node_modules/blockly/blockly_compressed.js"></script>
+    <script src="./node_modules/blockly/blocks_compressed.js"></script>
+    <script src="./node_modules/blockly/javascript_compressed.js"></script>
+    <script src="./node_modules/blockly/msg/en.js"></script>
+
+    <xml xmlns="https://developers.google.com/blockly/xml" id="startBlocks" style="display: none">
+        <block type="graph_set_y1" deletable="false" x="100" y="100">
+            <value name="VALUE">
+                <block type="math_number">
+                    <field name="NUM">0</field>
+                </block>
+            </value>
+        </block>
+    </xml>
+    
+    <script>
+        // Declaración de variables globales
+        const retos = [
+            { formula: 'x + 4', nombre: 'Función Lineal', bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">4</field></block></value></block>' },
+            { formula: 'Math.pow(x, 2) + 6', nombre: 'Función Cuadrática', bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">6</field></block></value></block>' },
+            { formula: 'Math.sqrt(x)', nombre: 'Función Raíz Cuadrada', bloques: '<block type="math_single"><field name="OP">ROOT</field><value name="NUM"><block type="graph_get_x"></block></value></block>' },
+            { formula: 'Math.pow(x, 3) + 2', nombre: 'Función Cúbica', bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">3</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block>' },
+            { formula: '(x - 5) / x', nombre: 'Función Racional', bloques: '<block type="math_arithmetic"><field name="OP">MINUS</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_arithmetic"><field name="OP">DIVIDE</field><value name="A"><block type="math_number"><field name="NUM">5</field></block></value><value name="B"><block type="graph_get_x"></block></value></block></value></block>' }
+        ];
+
+        let retoActual = 0;
+        let retosCompletados = 0;
+        let workspace = null;
+        let messageDiv;
+        let userChartContainer;
+        let retoTitle;
+
+        // Configuración de Blockly y bloques personalizados
+        const toolbox = {
+            kind: 'categoryToolbox',
+            contents: [
+                { kind: 'category', name: 'Matemáticas', colour: '%{BKY_MATH_HUE}', contents: [{ kind: 'block', type: 'math_number' }, { kind: 'block', type: 'math_arithmetic' }, { kind: 'block', type: 'math_single' }, { kind: 'block', type: 'math_trig' }, { kind: 'block', type: 'math_constant' }] },
+                { kind: 'category', name: 'Variables', colour: '%{BKY_VARIABLES_HUE}', contents: [{ kind: 'block', type: 'graph_get_x' }, { kind: 'block', type: 'graph_set_y1' }] },
+            ],
+        };
+
+        Blockly.defineBlocksWithJsonArray([
+            { type: 'graph_get_x', message0: 'x', output: 'Number', colour: Blockly.Msg['VARIABLES_HUE'] },
+            { type: 'graph_set_y1', message0: 'y = %1', args0: [{ type: 'input_value', name: 'VALUE', check: 'Number' }], colour: Blockly.Msg['VARIABLES_HUE'] },
+        ]);
+        javascript.javascriptGenerator.forBlock['graph_get_x'] = function (block) { return ['x', javascript.Order.ATOMIC]; };
+        javascript.javascriptGenerator.forBlock['graph_set_y1'] = function (block, generator) {
+            block.setDeletable(false);
+            var argument0 = generator.valueToCode(block, 'VALUE', javascript.Order.ASSIGNMENT) || '0';
+            return 'y1 = ' + argument0 + ';';
+        };
+
+        // ---
+
+        // Funciones de control de la aplicación
+
+        /**
+         * Genera los puntos para la gráfica a partir de una fórmula.
+         * @param {string} formula La fórmula matemática como una cadena de texto.
+         * @returns {Array<Array>} Tabla de datos para Google Charts.
+         */
+        function plotGraph(formula) {
+            let table = [['x', 'y']];
+            for (let x = -10; x <= 10; x = Math.round((x + 0.1) * 10) / 10) {
+                let y;
+                try {
+                    const f = new Function('x', `return ${formula};`);
+                    y = f(x);
+                } catch (e) {
+                    y = NaN;
+                }
+                if (!isNaN(y)) {
+                    y = Math.round(y * Math.pow(10, 14)) / Math.pow(10, 14);
+                    table.push([x, y]);
+                }
+            }
+            if (table.length === 1) table.push([0, 0]);
+            return table;
+        }
+
+        /**
+         * Evalúa la fórmula creada por el usuario contra la fórmula del reto.
+         */
+        function evaluarReto() {
+            const formulaAlumnoRaw = javascript.javascriptGenerator.workspaceToCode(workspace);
+            const formulaAlumno = formulaAlumnoRaw.replace(/y1\s*=\s*/, '').replace(/;$/, '').trim();
+            const formulaReto = retos[retoActual].formula.trim();
+            
+            const dataUsuario = google.visualization.arrayToDataTable(plotGraph(formulaAlumno));
+            userChartContainer.style.display = 'block';
+            new google.visualization.LineChart(
+                document.getElementById('user-chart')
+            ).draw(dataUsuario, { series: { 0: { color: 'blue' } } });
+
+            const puntosReto = plotGraph(formulaReto);
+            const puntosAlumno = plotGraph(formulaAlumno);
+            const sonIguales = JSON.stringify(puntosReto) === JSON.stringify(puntosAlumno);
+
+            messageDiv.className = '';
+
+            if (sonIguales) {
+                messageDiv.textContent = `¡Correcto! Has adivinado la función. 🎉`;
+                messageDiv.classList.add('correct');
+                
+                // Actualiza el progreso y lo guarda
+                if (retoActual === retosCompletados) {
+                    retosCompletados++;
+                    localStorage.setItem('retosCompletados', retosCompletados);
+                }
+                
+                setTimeout(siguienteReto, 2000); // Llama a la siguiente función después de 2 segundos
+            } else {
+                messageDiv.textContent = 'Inténtalo de nuevo. La gráfica no es la correcta.';
+                messageDiv.classList.add('incorrect');
+            }
+        }
+        
+        /**
+         * Pasa al siguiente reto o muestra un mensaje de finalización.
+         */
+        function siguienteReto() {
+            if (retoActual < retos.length - 1) {
+                cargarReto(retoActual + 1);
+            } else {
+                messageDiv.textContent = '¡Felicidades! Has completado todos los retos.';
+                messageDiv.classList.add('correct');
+            }
+            userChartContainer.style.display = 'none';
+        }
+
+        /**
+         * Carga y muestra un reto específico.
+         * @param {number} index El índice del reto a cargar.
+         */
+        function cargarReto(index) {
+            // No permitir cargar retos no resueltos
+            if (index > retosCompletados) {
+                return;
+            }
+
+            retoActual = index;
+            messageDiv.textContent = '';
+            messageDiv.className = '';
+
+            const reto = retos[retoActual];
+            retoTitle.textContent = `Reto ${retoActual + 1}: ${reto.nombre}`;
+            
+            const dataReto = google.visualization.arrayToDataTable(plotGraph(reto.formula));
+            new google.visualization.LineChart(
+                document.getElementById('reto-chart')
+            ).draw(dataReto, { series: { 0: { color: 'green' } } });
+
+            workspace.clear();
+            const startBlockXml = document.getElementById('startBlocks');
+            Blockly.Xml.domToWorkspace(startBlockXml, workspace);
+
+            actualizarNavegacion();
+        }
+
+        /**
+         * Actualiza la barra de navegación de retos.
+         */
+        function actualizarNavegacion() {
+            const navDiv = document.getElementById('reto-nav');
+            navDiv.innerHTML = ''; // Limpiar la barra de navegación anterior
+
+            for (let i = 0; i < retos.length; i++) {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.textContent = i + 1;
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    cargarReto(i);
+                };
+
+                // Asignar clases para la apariencia
+                if (i === retoActual) {
+                    link.classList.add('active');
+                }
+                if (i < retosCompletados) {
+                    link.classList.add('completed');
+                }
+                if (i > retosCompletados) {
+                    link.classList.add('disabled');
+                }
+
+                navDiv.appendChild(link);
+            }
+        }
+
+        /**
+         * Inicializa la aplicación cuando Google Charts está listo.
+         */
+        function init() {
+            messageDiv = document.getElementById('reto-message');
+            userChartContainer = document.getElementById('user-chart-container');
+            retoTitle = document.getElementById('reto-title');
+
+            // Cargar el progreso guardado
+            const savedProgress = localStorage.getItem('retosCompletados');
+            if (savedProgress !== null) {
+                retosCompletados = parseInt(savedProgress);
+            }
+
+            workspace = Blockly.inject('blocklyDiv', {
+                media: './node_modules/blockly/media/',
+                toolbox: toolbox,
+            });
+            
+            cargarReto(retoActual);
+            
+            window.addEventListener('resize', () => Blockly.svgResize(workspace));
+        }
+
+        // Lógica principal de inicio
+        if (typeof google === 'object') {
+            google.load('visualization', '1', { packages: ['corechart'] });
+            google.setOnLoadCallback(init);
+        }
+    </script>
+</body>
+</html>

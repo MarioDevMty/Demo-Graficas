@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graficación de Ecuaciones</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <link rel="stylesheet" href="katex/katex.min.css">
+    <script defer src="katex/katex.min.js"></script>
+    <script defer src="katex/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        /* Estilos adicionales para este contenido */
+        .content-page h2 {
+            color: #333;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .content-page p {
+            line-height: 1.6;
+        }
+        .content-page ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .content-page li {
+            background: #f4f4f4;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .equation-box {
+            background: #eef;
+            border: 1px solid #ccd;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        .coordinate-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .coordinate-table th, .coordinate-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .coordinate-table th {
+            background-color: #f2f2f2;
+        }
+
+        /* styles.css o dentro de <style> en el HTML */
+        .katex {
+            display: inline !important;
+            white-space: nowrap !important; /* Evita que el contenido interno de KaTeX se rompa */
+        }
+
+        /* También es buena idea revisar los spans que KaTeX genera para las ecuaciones */
+        .katex-display {
+            display: block !important; /* Esto es para las ecuaciones en modo display ($$ ... $$) */
+        }
+        .katex {
+    white-space: nowrap;
+}
+    </style>
+</head>
+<body>
+
+    <nav class="nav-dots">
+        <ul>
+            <li><a href="index.html">1</a></li>
+            <li><a href="teoria.html" class="active">2</a></li>
+            <li><a href="grafico.html">3</a></li>
+            <li><a href="aplicacion.html">4</a></li>
+            <li><a href="evaluacion.html">5</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="content-page">
+            <h2>Graficación de Ecuaciones: Conceptos Fundamentales</h2>
+            <p>La <strong>gráfica de una ecuación</strong> es una herramienta 
+            visual esencial en matemáticas. 
+            Nos permite entender de forma intuitiva la relación entre dos variables. 
+            Cada punto en la gráfica representa una solución para la ecuación. 
+            Es un mapa que muestra todas las combinaciones posibles de valores que satisfacen
+             la ecuación.</p>
+
+            <h3>Sistema de Coordenadas Cartesiano 🗺️</h3>
+            <p>Para graficar una ecuación, necesitamos un marco de referencia. 
+                El <strong>sistema de coordenadas cartesianas</strong>, 
+                o plano cartesiano, es ese marco. 
+                Está formado por dos líneas perpendiculares llamadas ejes: 
+                el eje horizontal $(x)$ y el eje vertical $(y)$. 
+                Estos ejes se intersecan en un punto central conocido 
+                como el <strong>origen</strong> $(0, 0)$. El plano se divide en cuatro cuadrantes, permitiendo ubicar cualquier punto usando una pareja de números.</p>
+            <h3>Pares Ordenados como Soluciones 🎯</h3>
+            <p>Un <strong>par ordenado</strong> es un conjunto de dos números, 
+                usualmente escrito como <p>$$(x, y)$$</p>, que representa 
+                un punto específico en el plano cartesiano. 
+                El primer número, $x$, indica la posición horizontal 
+                y el segundo, $y$, la posición vertical. 
+                Un par ordenado es una <strong>solución de una ecuación con dos variables
+                    <strong> si, al sustituir los valores de 
+                        $x$ y $y$ en la ecuación, esta se convierte 
+                        en una afirmación verdadera. Por ejemplo, en la ecuación $$x + y = 5$$, el par ordenado $$(2, 3)$$ es una solución porque $$2 + 3 = 5$$ es verdadero.</p>
+
+            <h3>Ecuaciones con Dos Variables</h3>
+            <p>Una <strong>ecuación con dos variables</strong> es una expresión matemática que contiene dos incógnitas, comúnmente $$x$$ y $$y$$. A diferencia de las ecuaciones con una sola variable (como $$x+5=10$$), estas ecuaciones no tienen una única solución, sino un número infinito de pares ordenados que las satisfacen. Ejemplos de estas ecuaciones son:</p>
+            <ul>
+                <li><p>$$y = 2x + 1$$</p></li>
+                <li><p>$$x^2 + y^2 = 9$$</p></li>
+                <li><p>$$y = x^3 - 4$$</p></li>
+            </ul>
+
+            <p>Cada uno de los pares ordenados que satisfacen la ecuación representa un punto en la gráfica. Al unir todos esos puntos, se forma la línea, curva o figura que es la representación visual de la ecuación.</p>
+
+            <h3>Procedimiento para Graficar una Ecuación ✍️</h3>
+            <p>Aquí te mostramos los pasos para graficar una ecuación, utilizando el ejemplo $$x + 2y = 8$$.</p>
+
+            <div class="equation-box">
+                <h4>Paso 1: Despejar una variable</h4>
+                <p>Elige una de las variables para despejarla. Generalmente es más sencillo despejar $$y$$ para que la ecuación esté en la forma $$y = \text{expresión de } x$$.</p>
+                <p>$$x + 2y = 8$$</p>
+                <p>$$2y = 8 - x$$</p>
+                <p>$$y = \frac{8 - x}{2}$$</p>
+            </div>
+
+            <div class="equation-box">
+                <h4>Paso 2: Construir una tabla de valores</h4>
+                <p>Elige algunos valores para $$x$$ (pueden ser números enteros, tanto positivos como negativos, y el cero). Sustituye cada valor en la ecuación despejada para encontrar el valor correspondiente de $$y$$. Esto te dará varios pares ordenados.</p>
+                <div class="table-container">
+                    <table class="coordinate-table">
+                        <thead>
+                            <tr>
+                                <th>$$x$$</th>
+                                <th>$$y = \frac{8 - x}{2}$$</th>
+                                <th>Par Ordenado $$(x, y)$$</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>-2</td>
+                                <td>$$y = \frac{8 - (-2)}{2} = \frac{10}{2} = 5$$</td>
+                                <td>$$(-2, 5)$$</td>
+                            </tr>
+                            <tr>
+                                <td>0</td>
+                                <td>$$y = \frac{8 - 0}{2} = \frac{8}{2} = 4$$</td>
+                                <td>$$(0, 4)$$</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>$$y = \frac{8 - 2}{2} = \frac{6}{2} = 3$$</td>
+                                <td>$$(2, 3)$$</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>$$y = \frac{8 - 4}{2} = \frac{4}{2} = 2$$</td>
+                                <td>$$(4, 2)$$</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>$$y = \frac{8 - 6}{2} = \frac{2}{2} = 1$$</td>
+                                <td>$$(6, 1)$$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="equation-box">
+                <h4>Paso 3: Situar los pares ordenados en el plano cartesiano</h4>
+                <p>Usa los pares ordenados que obtuviste para marcar los puntos en el plano. Para cada punto $$(x, y)$$:
+                <ol>
+                    <li>Comienza en el origen $$(0, 0)$$.</li>
+                    <li>Muévete horizontalmente a lo largo del eje $$x$$ hasta el valor de $$x$$ (a la derecha si es positivo, a la izquierda si es negativo).</li>
+                    <li>Luego, muévete verticalmente desde esa posición a lo largo del eje $$y$$ hasta el valor de $$y$$ (hacia arriba si es positivo, hacia abajo si es negativo).</li>
+                </ol></p>
+            </div>
+
+            <div class="equation-box">
+                <h4>Paso 4: Trazar la gráfica</h4>
+                <p>Una vez que hayas situado suficientes puntos, usa una regla para trazar una línea recta que pase por todos ellos. Dado que nuestra ecuación de ejemplo es una ecuación lineal, su gráfica siempre será una línea recta. Si la ecuación fuera cuadrática (con $$x^2$$), la gráfica sería una curva llamada parábola.</p>
+            </div>
+
+            <p>La línea que trazaste es la representación gráfica de la ecuación $$x + 2y = 8$$. Todos los puntos en esa línea, y solo ellos, son soluciones de la ecuación.</p>
+        </div>
+    </main>
+
+</body>
+</html>
