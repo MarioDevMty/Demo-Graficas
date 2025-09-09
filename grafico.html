@@ -9,7 +9,24 @@
     <script src="./node_modules/blockly/javascript_compressed.js"></script>
     <script src="./node_modules/blockly/msg/en.js"></script>
     <link rel="stylesheet" href="styles.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
+    <style>
+      .intro-image-container {
+        display: none;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .intro-image-container img {
+        width: 100%;
+        height: auto;
+        border: 2px solid #3498db;
+        border-radius: 8px;
+      }
+    </style>
   </head>
   <body>
     <nav class="nav-dots">
@@ -28,75 +45,27 @@
       &rarr; Puedes usar las variables y los operadores matemáticos básicos.
     </p>
 
+    <button onclick="startTutorial()" class="tutorial-btn">Iniciar Tutorial</button>
+
+    <div id="tutorial-intro-container" class="intro-image-container" data-intro="¡Bienvenido al tutorial! Aquí te mostraremos las diferentes áreas de la interfaz." data-step="1">
+        <img src="assets/blockly-tour.png" alt="Área de trabajo de Blockly">
+        <p>
+            1. **Caja de Herramientas:** Los bloques de programación están en el lado izquierdo.
+            <br>2. **Área de Programación:** En el centro, es donde creas tu función.
+            <br>3. **Área de la Gráfica:** En el lado derecho, donde ves el resultado de tu código.
+        </p>
+    </div>
+
     <table>
       <tr>
-        <td>
-          <div id="blocklyDiv" style="height: 400px"></div>
+        <td id="blocklyTd">
+          <div id="blocklyDiv" style="height: 400px" data-intro="En este espacio en blanco puedes arrastrar los bloques de la caja de herramientas, unirlos como piezas de LEGO y construir tu función." data-step="2"></div>
         </td>
-        <td>
-          <div id="visualization" style="width: 400px"></div>
+        <td id="graphTd">
+          <div id="visualization" style="width: 400px" data-intro="Cada vez que cambies tu función, la gráfica se actualizará automáticamente aquí. Puedes usar el mouse para hacer zoom o moverte." data-step="3"></div>
         </td>
       </tr>
     </table>
-
-    <div id="funcText">
-      <div>
-        <img id="y1" src="../../media/1x1.gif" />
-        ...
-      </div>
-      <div>
-        <img id="y2" src="../../media/1x1.gif" />
-        ...
-      </div>
-    </div>
-
-    <xml
-      xmlns="https://developers.google.com/blockly/xml"
-      id="startBlocks"
-      style="display: none">
-      <block type="graph_set_y1" deletable="false" x="100" y="100">
-        <value name="VALUE">
-          <block type="math_arithmetic">
-            <field name="OP">POWER</field>
-            <value name="A">
-              <block type="graph_get_x"></block>
-              <shadow type="math_number">
-                <field name="NUM">1</field>
-              </shadow>
-            </value>
-            <value name="B">
-              <block type="math_number">
-                <field name="NUM">2</field>
-              </block>
-              <shadow type="math_number">
-                <field name="NUM">1</field>
-              </shadow>
-            </value>
-          </block>
-        </value>
-      </block>
-      <block type="graph_set_y2" deletable="true" x="100" y="200">
-        <value name="VALUE">
-          <block type="math_arithmetic">
-            <field name="OP">MULTIPLY</field>
-            <value name="A">
-              <block type="math_number">
-                <field name="NUM">2</field>
-              </block>
-              <shadow type="math_number">
-                <field name="NUM">1</field>
-              </shadow>
-            </value>
-            <value name="B">
-              <block type="graph_get_x"></block>
-              <shadow type="math_number">
-                <field name="NUM">1</field>
-              </shadow>
-            </value>
-          </block>
-        </value>
-      </block>
-    </xml>
 
     <script>
       // Load the Google Chart Tools Visualization API and the chart package.
@@ -116,6 +85,7 @@
           {
             kind: 'category',
             name: 'Matemáticas, Valores y operadores',
+            id: 'mathCategory',
             colour: '%{BKY_MATH_HUE}',
             contents: [
               {
@@ -206,25 +176,19 @@
           {
             kind: 'category',
             name: 'Variables',
+            id: 'variablesCategory',
             colour: '%{BKY_VARIABLES_HUE}',
             contents: [
               {
                 kind: 'block',
                 type: 'graph_get_x',
-              },
-              {
-                kind: 'block',
-                type: 'graph_set_y1',
-              },
-              {
-                kind: 'block',
-                type: 'graph_set_y2',
-              },
+              }
             ],
           },
           {
             kind: 'category',
             name: 'Logic',
+            id: 'logicCategory',
             colour: '%{BKY_LOGIC_HUE}',
             contents: [
               {
@@ -298,49 +262,6 @@
                 },
               },
             },
-            {
-              kind: 'block',
-              type: 'graph_set_y2',
-              x: 100,
-              y: 200,
-              inputs: {
-                VALUE: {
-                  block: {
-                    type: 'math_arithmetic',
-                    fields: {
-                      OP: 'MULTIPLY',
-                    },
-                    inputs: {
-                      A: {
-                        block: {
-                          type: 'math_number',
-                          fields: {
-                            NUM: 2,
-                          },
-                          shadow: {
-                            type: 'math_number',
-                            fields: {
-                              NUM: 1,
-                            },
-                          },
-                        },
-                      },
-                      B: {
-                        block: {
-                          type: 'graph_get_x',
-                          shadow: {
-                            type: 'math_number',
-                            fields: {
-                              NUM: 1,
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
           ],
         },
       };
@@ -366,21 +287,7 @@
       Blockly.defineBlocksWithJsonArray([
         {
           type: 'graph_set_y1',
-          message0: 'y1 = %1',
-          args0: [
-            {
-              type: 'input_value',
-              name: 'VALUE',
-              check: 'Number',
-            },
-          ],
-          colour: Blockly.Msg['VARIABLES_HUE'],
-          tooltip: Blockly.Msg['VARIABLES_SET_TOOLTIP'],
-          helpUrl: Blockly.Msg['VARIABLES_SET_HELPURL'],
-        },
-        {
-          type: 'graph_set_y2',
-          message0: 'y2 = %1',
+          message0: 'y = %1',
           args0: [
             {
               type: 'input_value',
@@ -403,16 +310,6 @@
           generator.valueToCode(block, 'VALUE', javascript.Order.ASSIGNMENT) ||
           '0';
         return 'y1 = ' + argument0 + ';';
-      };
-
-      javascript.javascriptGenerator.forBlock['graph_set_y2'] = function (
-        block,
-        generator,
-      ) {
-        var argument0 =
-          generator.valueToCode(block, 'VALUE', javascript.Order.ASSIGNMENT) ||
-          '0';
-        return 'y2 = ' + argument0 + ';';
       };
 
       /**
@@ -445,7 +342,6 @@
         chartArea: {left: '10%', width: '85%', height: '85%'},
         series: {
           0: {color: '#36c'},
-          1: {color: '#dc3912'},
         },
       };
 
@@ -457,13 +353,12 @@
       Graph.drawVisualization = function () {
         var formulas = javascript.javascriptGenerator.workspaceToCode(
           Graph.workspace,
-        ).split(';');
-        formulas.pop(); // Remove the last empty element.
-        if (formulas.toString() === Graph.oldFormulas_) {
+        );
+        if (formulas === Graph.oldFormulas_) {
           // No change in the formula, don't recompute.
           return;
         }
-        Graph.oldFormulas_ = formulas.toString();
+        Graph.oldFormulas_ = formulas;
 
         // Create and populate the data table.
         var data = google.visualization.arrayToDataTable(
@@ -473,20 +368,6 @@
         new google.visualization.LineChart(
           document.getElementById('visualization'),
         ).draw(data, Graph.options_);
-
-        // Create the "y = ..." label.  Find the relevant part of the code.
-        var funcText = document.getElementById('funcText');
-        var textNodes = [
-          funcText.querySelector('div:nth-child(1)'),
-          funcText.querySelector('div:nth-child(2)'),
-        ];
-        
-        for (var i = 0; i < formulas.length; i++) {
-          textNodes[i].replaceChild(
-            document.createTextNode(formulas[i].trim() + ';'),
-            textNodes[i].lastChild,
-          );
-        }
       };
 
       /**
@@ -496,27 +377,18 @@
        */
       Graph.plot = function (codes) {
         // Initialize a table with two column headings.
-        var table = [['x']];
-        for (var i = 0; i < codes.length; i++) {
-          table[0].push('y' + (i + 1));
-        }
-
+        var table = [['x', 'y']];
         // TODO: Improve range and scale of graph.
         for (var x = -10; x <= 10; x = Math.round((x + 0.1) * 10) / 10) {
           try {
-            var y1, y2;
-            eval(codes.join(''));
+            var y1;
+            eval(codes);
           } catch (e) {
-            y1 = y2 = NaN;
+            y1 = NaN;
           }
           var row = [x];
           if (!isNaN(y1)) {
             row.push(Math.round(y1 * Math.pow(10, 14)) / Math.pow(10, 14));
-          } else {
-            row.push(null);
-          }
-          if (!isNaN(y2)) {
-            row.push(Math.round(y2 * Math.pow(10, 14)) / Math.pow(10, 14));
           } else {
             row.push(null);
           }
@@ -526,7 +398,7 @@
         }
         // If the table is empty, add a dummy row to prevent graph error.
         if (table.length === 1) {
-          table.push([0, 0, 0]);
+          table.push([0, 0]);
         }
         return table;
       };
@@ -559,6 +431,14 @@
         Graph.workspace.addChangeListener(Blockly.Events.disableOrphans);
         Graph.resize();
       };
+      
+      // Función para iniciar el tutorial
+      function startTutorial() {
+          // Aseguramos que Intro.js se inicie después de que Blockly haya renderizado el toolbox
+          setTimeout(() => {
+            introJs().start();
+          }, 500); // Pequeño retraso de 500ms
+      }
 
       window.addEventListener('load', Graph.init);
       window.addEventListener('resize', Graph.resize);

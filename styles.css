@@ -138,3 +138,20 @@ main {
 #y2 {
     background-color: #dc3912;
 }
+
+
+
+.tutorial-btn{
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .tutorial-btn:hover {
+    background-color: #45a049;
+  }
+  .tutorial-btn:active {
+    background-color: #3e8e41;
+  }
