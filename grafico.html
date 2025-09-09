@@ -8,6 +8,8 @@
     <script src="./node_modules/blockly/blocks_compressed.js"></script>
     <script src="./node_modules/blockly/javascript_compressed.js"></script>
     <script src="./node_modules/blockly/msg/en.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
@@ -25,6 +27,59 @@
         height: auto;
         border: 2px solid #3498db;
         border-radius: 8px;
+      }
+      .examples-container {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f0f4f8;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        text-align: center;
+      }
+      .example {
+        display: none; /* Por defecto, todos los ejemplos están ocultos */
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #ffffff;
+        border: 1px solid #e0e6ed;
+        border-radius: 8px;
+      }
+      .example.active {
+          display: block; /* Muestra el ejemplo activo */
+      }
+      .example-title {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+      .example-blocks img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* Estilos para la nueva barra de navegación de ejemplos */
+      .example-nav {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 20px;
+      }
+      .example-nav button {
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          margin: 0 5px;
+          font-size: 1em;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s, transform 0.2s;
+      }
+      .example-nav button.active, .example-nav button:hover {
+          background-color: #3498db;
+          color: #fff;
+          transform: scale(1.1);
       }
     </style>
   </head>
@@ -47,7 +102,7 @@
 
     <button onclick="startTutorial()" class="tutorial-btn">Iniciar Tutorial</button>
 
-    <div id="tutorial-intro-container" class="intro-image-container" data-intro="¡Bienvenido al tutorial! Aquí te mostraremos las diferentes áreas de la interfaz." data-step="1">
+    <div id="tutorial-intro-container" class="intro-image-container" data-intro="¡Bienvenido al tutorial! Primero, analizaremos la interfaz para que te familiarices con las áreas de trabajo." data-step="1">
         <img src="assets/blockly-tour.png" alt="Área de trabajo de Blockly">
         <p>
             1. **Caja de Herramientas:** Los bloques de programación están en el lado izquierdo.
@@ -55,18 +110,69 @@
             <br>3. **Área de la Gráfica:** En el lado derecho, donde ves el resultado de tu código.
         </p>
     </div>
-
+    
+    <hr>
+    
     <table>
       <tr>
         <td id="blocklyTd">
-          <div id="blocklyDiv" style="height: 400px" data-intro="En este espacio en blanco puedes arrastrar los bloques de la caja de herramientas, unirlos como piezas de LEGO y construir tu función." data-step="2"></div>
+          <div id="blocklyDiv" style="height: 400px" data-intro="En este espacio puedes arrastrar y unir los bloques de la caja de herramientas para construir tu función." data-step="2"></div>
         </td>
         <td id="graphTd">
-          <div id="visualization" style="width: 400px" data-intro="Cada vez que cambies tu función, la gráfica se actualizará automáticamente aquí. Puedes usar el mouse para hacer zoom o moverte." data-step="3"></div>
+          <div id="visualization" style="width: 400px" data-intro="Aquí se mostrará la gráfica de la función que programes. ¡Verás los resultados en tiempo real!" data-step="3"></div>
         </td>
       </tr>
     </table>
+    
+    <div class="examples-container">
+        <h2>Ejemplos para Emular</h2>
+        
+        <div class="example-nav" data-intro="Usa estos botones para navegar entre los diferentes ejemplos. Observa cada uno y trata de replicarlo en el área de trabajo de Blockly." data-step="4">
+            <button onclick="showExample(1)" class="active">1</button>
+            <button onclick="showExample(2)">2</button>
+            <button onclick="showExample(3)">3</button>
+            <button onclick="showExample(4)">4</button>
+            <button onclick="showExample(5)">5</button>
+        </div>
+        
+        <div class="examples-content-wrapper">
+            <div id="example-1" class="example active">
+                <div class="example-title">Función: $y = x^2 + 5$</div>
+                <div class="example-blocks">
+                    <img src="assets/y=x^2+5.png" alt="Bloques para y=x^2+5">
+                </div>
+            </div>
 
+            <div id="example-2" class="example">
+                <div class="example-title">Función: $y = x - 2$</div>
+                <div class="example-blocks">
+                    <img src="assets/y=x-2.png" alt="Bloques para y=x-2">
+                </div>
+            </div>
+
+            <div id="example-3" class="example">
+                <div class="example-title">Función: $y = \frac{2}{3}x + 1$</div>
+                <div class="example-blocks">
+                    <img src="assets/y=23x+1.png" alt="Bloques para y=2/3x+1">
+                </div>
+            </div>
+            
+            <div id="example-4" class="example">
+                <div class="example-title">Función: $y = \sqrt{x}$</div>
+                <div class="example-blocks">
+                    <img src="assets/y=sqrtx.png" alt="Bloques para y=sqrt(x)">
+                </div>
+            </div>
+            
+            <div id="example-5" class="example">
+                <div class="example-title">Función: $y = x^3 + 2$</div>
+                <div class="example-blocks">
+                    <img src="assets/y=x^3+2.png" alt="Bloques para y=x^3+2">
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
       // Load the Google Chart Tools Visualization API and the chart package.
       if (typeof google == 'object') {
@@ -430,14 +536,35 @@
         Graph.workspace.addChangeListener(Graph.drawVisualization);
         Graph.workspace.addChangeListener(Blockly.Events.disableOrphans);
         Graph.resize();
+
+        // Muestra el primer ejemplo por defecto
+        showExample(1);
       };
       
+      // Función para controlar la visibilidad de los ejemplos
+      function showExample(exampleNumber) {
+          // Oculta todos los ejemplos
+          const allExamples = document.querySelectorAll('.example');
+          allExamples.forEach(el => el.classList.remove('active'));
+
+          // Desactiva todos los botones de navegación
+          const allButtons = document.querySelectorAll('.example-nav button');
+          allButtons.forEach(btn => btn.classList.remove('active'));
+
+          // Muestra el ejemplo seleccionado y activa su botón
+          const selectedExample = document.getElementById(`example-${exampleNumber}`);
+          const selectedButton = document.querySelector(`.example-nav button:nth-child(${exampleNumber})`);
+          if (selectedExample && selectedButton) {
+              selectedExample.classList.add('active');
+              selectedButton.classList.add('active');
+          }
+      }
+
       // Función para iniciar el tutorial
       function startTutorial() {
-          // Aseguramos que Intro.js se inicie después de que Blockly haya renderizado el toolbox
           setTimeout(() => {
             introJs().start();
-          }, 500); // Pequeño retraso de 500ms
+          }, 500);
       }
 
       window.addEventListener('load', Graph.init);
