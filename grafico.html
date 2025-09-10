@@ -105,9 +105,9 @@
     <div id="tutorial-intro-container" class="intro-image-container" data-intro="¡Bienvenido al tutorial! Primero, analizaremos la interfaz para que te familiarices con las áreas de trabajo." data-step="1">
         <img src="assets/blockly-tour.png" alt="Área de trabajo de Blockly">
         <p>
-            1. **Caja de Herramientas:** Los bloques de programación están en el lado izquierdo.
-            <br>2. **Área de Programación:** En el centro, es donde creas tu función.
-            <br>3. **Área de la Gráfica:** En el lado derecho, donde ves el resultado de tu código.
+          1. **Caja de Herramientas:** Los bloques de programación están en el lado izquierdo.
+          <br>2. **Área de Programación:** En el centro, es donde creas tu función.
+          <br>3. **Área de la Gráfica:** En el lado derecho, donde ves el resultado de tu código.
         </p>
     </div>
     
@@ -277,6 +277,10 @@
                   },
                 },
               },
+              {
+                kind: 'block',
+                type: 'math_fraction',
+              },
             ],
           },
           {
@@ -416,6 +420,37 @@
           generator.valueToCode(block, 'VALUE', javascript.Order.ASSIGNMENT) ||
           '0';
         return 'y1 = ' + argument0 + ';';
+      };
+
+      // Nuevo bloque para fracciones
+      Blockly.defineBlocksWithJsonArray([
+        {
+          type: 'math_fraction',
+          message0: 'fracción %1 / %2',
+          args0: [
+            {
+              type: 'input_value',
+              name: 'NUMERATOR',
+              check: 'Number',
+            },
+            {
+              type: 'input_value',
+              name: 'DENOMINATOR',
+              check: 'Number',
+            },
+          ],
+          output: 'Number',
+          colour: Blockly.Msg['MATH_HUE'],
+          tooltip: 'Calcula el valor de una fracción.',
+          helpUrl: '',
+        },
+      ]);
+
+      javascript.javascriptGenerator.forBlock['math_fraction'] = function (block, generator) {
+        var numerator = generator.valueToCode(block, 'NUMERATOR', javascript.Order.DIVISION) || '0';
+        var denominator = generator.valueToCode(block, 'DENOMINATOR', javascript.Order.DIVISION) || '0';
+        var code = '(' + numerator + ' / ' + denominator + ')';
+        return [code, javascript.Order.DIVISION];
       };
 
       /**
