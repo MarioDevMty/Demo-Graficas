@@ -94,7 +94,7 @@
                 
                 <div id="blocklyDiv" style="height: 400px; width: 100%;"></div>
                 
-                <button onclick="evaluarReto()">Evaluar</button>
+                <button onclick="evaluarReto()" class="action-btn">Evaluar</button>
             </div>
             
             <div id="user-chart-container" style="display: none;">
@@ -123,12 +123,32 @@
     <script>
         // Declaración de variables globales
         const retos = [
-            { formula: 'x + 4', nombre: 'Función Lineal', bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">4</field></block></value></block>' },
-            { formula: 'Math.pow(x, 2) + 6', nombre: 'Función Cuadrática', bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">6</field></block></value></block>' },
-            { formula: 'Math.sqrt(x)', nombre: 'Función Raíz Cuadrada', bloques: '<block type="math_single"><field name="OP">ROOT</field><value name="NUM"><block type="graph_get_x"></block></value></block>' },
-            { formula: 'Math.pow(x, 3) + 2', nombre: 'Función Cúbica', bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">3</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block>' },
-            { formula: '(x - 5) / x', nombre: 'Función Racional', bloques: '<block type="math_arithmetic"><field name="OP">MINUS</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_arithmetic"><field name="OP">DIVIDE</field><value name="A"><block type="math_number"><field name="NUM">5</field></block></value><value name="B"><block type="graph_get_x"></block></value></block></value></block>' }
-        ];
+    {
+        formula: 'x + 4',
+        nombre: 'Función Lineal',
+        bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">4</field></block></value></block>'
+    },
+    {
+        formula: 'Math.pow(x, 2) + 6',
+        nombre: 'Función Cuadrática',
+        bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">6</field></block></value></block>'
+    },
+    {
+        formula: 'Math.sqrt(x)',
+        nombre: 'Función Raíz Cuadrada',
+        bloques: '<block type="math_single"><field name="OP">ROOT</field><value name="NUM"><block type="graph_get_x"></block></value></block>'
+    },
+    {
+        formula: 'Math.pow(x, 3) + 2',
+        nombre: 'Función Cúbica',
+        bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">3</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block>'
+    },
+    {
+        formula: 'x - 5 / x',
+        nombre: 'Función Racional',
+        bloques: '<block type="math_arithmetic"><field name="OP">MINUS</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_arithmetic"><field name="OP">DIVIDE</field><value name="A"><block type="math_number"><field name="NUM">5</field></block></value><value name="B"><block type="graph_get_x"></block></value></block></value></block>'
+    }
+];
 
         let retoActual = 0;
         let retosCompletados = 0;

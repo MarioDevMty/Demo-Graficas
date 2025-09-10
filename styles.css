@@ -141,7 +141,7 @@ main {
 
 
 
-.tutorial-btn{
+.action-btn{
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
@@ -149,9 +149,9 @@ main {
     border-radius: 5px;
     cursor: pointer;
   }
-  .tutorial-btn:hover {
+  .action-btn:hover {
     background-color: #45a049;
   }
-  .tutorial-btn:active {
+  .action-btn:active {
     background-color: #3e8e41;
   }
