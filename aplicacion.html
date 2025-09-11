@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluación - Plataforma de Funciones</title>
+    <title>ABR - Plataforma de Funciones</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Estilos específicos para la página de evaluación */
+        /* Estilos generales para la página de evaluación */
         #reto-container {
             display: flex;
             justify-content: center;
@@ -75,11 +75,80 @@
         #reto-nav a.disabled {
             pointer-events: none;
             opacity: 0.5;
+            background-color: #ccc;
+        }
+        .hidden {
+            display: none;
+        }
+
+        /* --- Estilos para el botón y los modales con <dialog> --- */
+        .hint-button {
+            background-color: #f0ad4e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Estilo del contenido dentro de los <dialog> */
+        dialog .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        /* Estilo del fondo semitransparente para ambos diálogos */
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #pista-tabla {
+            margin-top: 10px;
+        }
+
+        #pista-tabla table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #pista-tabla th, #pista-tabla td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* Estilos para el nuevo diálogo de opciones */
+        #opciones-modal .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-continuar, .btn-reiniciar {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn-continuar {
+            background-color: #007bff;
+        }
+
+        .btn-reiniciar {
+            background-color: #dc3545;
         }
     </style>
 </head>
 <body>
-
     <nav class="nav-dots">
         <ul>
             <li><a href="index.html">1</a></li>
@@ -92,8 +161,8 @@
 
     <main>
         <div class="content-page">
-            <h2>Evaluación - Adivina la Gráfica</h2>
-            <p>Usa los bloques para crear la función que corresponde a la gráfica que se muestra. Cuando creas que es correcta, presiona "Evaluar".</p>
+            <h2>ABR - Analiza y construye la funcion de la Gráfica</h2>
+            <p>Usa los bloques para crear la función que corresponde a la gráfica que se muestra. Cuando termines de construir la funcion, presiona "Evaluar".</p>
 
             <div id="reto-nav"></div>
             <h3 id="reto-title"></h3>
@@ -111,13 +180,35 @@
                 </div>
 
                 <div id="reto-message"></div>
-                
+                <div id="button-container">
+                    <button id="evaluar-btn" onclick="evaluarReto()" class="action-btn">Evaluar</button>
+                    <button id="pista-btn" onclick="mostrarPista()" class="hint-button">Pista</button>
+                    <button id="siguiente-btn" onclick="cargarSiguienteReto()" class="action-btn hidden">Siguiente</button>
+                </div>
                 <div id="blocklyDiv" style="height: 400px; width: 100%;"></div>
                 
-                <button onclick="evaluarReto()" class="action-btn">Evaluar</button>
+                
             </div>
         </div>
     </main>
+    
+    <dialog id="pista-modal">
+        <div class="modal-content">
+            <button class="close-button" onclick="cerrarModalPista()">Cerrar</button>
+            <h4>Tabla de Valores</h4>
+            <div id="pista-tabla"></div>
+        </div>
+    </dialog>
+
+    <dialog id="opciones-modal">
+        <div class="modal-content">
+            <h3>¿Quieres continuar con tu progreso, o reinciar el avance?</h3>
+            <div class="button-group">
+                <button class="btn-continuar" onclick="cargarAvance()">Continuar</button>
+                <button class="btn-reiniciar" onclick="reiniciarAvance()">Reiniciar</button>
+            </div>
+        </div>
+    </dialog>
 
     <script src="https://www.google.com/jsapi"></script>
     <script src="./node_modules/blockly/blockly_compressed.js"></script>
@@ -136,7 +227,6 @@
     </xml>
     
     <script>
-        // Hemos añadido propiedades de ploteo y visualización a cada reto
         const retos = [
             {
                 formula: 'x + 4',
@@ -186,6 +276,12 @@
         let messageDiv;
         let userChartContainer;
         let retoTitle;
+        let evaluarBtn;
+        let siguienteBtn;
+        let pistaBtn;
+        let pistaModal;
+        let pistaTabla;
+        let opcionesModal; 
 
         const toolbox = {
             kind: 'categoryToolbox',
@@ -206,13 +302,6 @@
             return 'y1 = ' + argument0 + ';';
         };
 
-        /**
-         * Genera los puntos para la gráfica a partir de una fórmula y un rango de x.
-         * @param {string} formula La fórmula matemática como una cadena de texto.
-         * @param {number} xMin El valor mínimo del eje X para el cálculo.
-         * @param {number} xMax El valor máximo del eje X para el cálculo.
-         * @returns {Array<Array>} Tabla de datos para Google Charts.
-         */
         function plotGraph(formula, xMin, xMax) {
             let table = [['x', 'y']];
             for (let x = xMin; x <= xMax; x = Math.round((x + 0.1) * 10) / 10) {
@@ -237,11 +326,9 @@
             const formulaAlumnoRaw = javascript.javascriptGenerator.workspaceToCode(workspace);
             const formulaAlumno = formulaAlumnoRaw.replace(/y1\s*=\s*/, '').replace(/;$/, '').trim();
 
-            // Usamos los rangos de ploteo definidos en el reto
             const dataUsuario = google.visualization.arrayToDataTable(plotGraph(formulaAlumno, reto.plotXMin, reto.plotXMax));
             userChartContainer.style.display = 'block';
 
-            // Usamos los rangos de visualización definidos en el reto para la gráfica del usuario
             const userChartOptions = {
                 hAxis: { title: 'x', viewWindow: { min: reto.viewXMin, max: reto.viewXMax } },
                 vAxis: { title: 'y', viewWindow: { min: reto.viewYMin, max: reto.viewYMax } },
@@ -269,21 +356,25 @@
                     localStorage.setItem('retosCompletados', retosCompletados);
                 }
                 
-                setTimeout(siguienteReto, 2000);
+                evaluarBtn.classList.add('hidden');
+                pistaBtn.classList.add('hidden');
+                siguienteBtn.classList.remove('hidden');
             } else {
                 messageDiv.textContent = 'Inténtalo de nuevo. La gráfica no es la correcta.';
                 messageDiv.classList.add('incorrect');
             }
         }
         
-        function siguienteReto() {
+        function cargarSiguienteReto() {
             if (retoActual < retos.length - 1) {
                 cargarReto(retoActual + 1);
             } else {
                 messageDiv.textContent = '¡Felicidades! Has completado todos los retos.';
                 messageDiv.classList.add('correct');
+                evaluarBtn.classList.add('hidden');
+                pistaBtn.classList.add('hidden');
+                siguienteBtn.classList.add('hidden');
             }
-            userChartContainer.style.display = 'none';
         }
 
         function cargarReto(index) {
@@ -294,11 +385,15 @@
             retoActual = index;
             messageDiv.textContent = '';
             messageDiv.className = '';
+            userChartContainer.style.display = 'none';
+
+            evaluarBtn.classList.remove('hidden');
+            pistaBtn.classList.remove('hidden');
+            siguienteBtn.classList.add('hidden');
 
             const reto = retos[retoActual];
             retoTitle.textContent = `Reto ${retoActual + 1}: ${reto.nombre}`;
             
-            // Usamos los rangos de visualización y ploteo definidos en el reto
             const dataReto = google.visualization.arrayToDataTable(plotGraph(reto.formula, reto.plotXMin, reto.plotXMax));
             const retoChartOptions = {
                 hAxis: { title: 'x', viewWindow: { min: reto.viewXMin, max: reto.viewXMax } },
@@ -315,7 +410,6 @@
             const startBlockXml = document.getElementById('startBlocks');
             Blockly.Xml.domToWorkspace(startBlockXml, workspace);
 
-            userChartContainer.style.display = 'none';
             actualizarNavegacion();
         }
 
@@ -346,30 +440,96 @@
             }
         }
 
+        function mostrarPista() {
+            const reto = retos[retoActual];
+            let tablaHTML = '<table><thead><tr><th>X</th><th>Y</th></tr></thead><tbody>';
+
+            const valoresX = [-2, -1, 0, 1, 2, 3];
+            
+            const f = new Function('x', `return ${reto.formula};`);
+            
+            valoresX.forEach(x => {
+                let y = f(x);
+                y = Math.round(y * 100) / 100;
+                tablaHTML += `<tr><td>${x}</td><td>${y}</td></tr>`;
+            });
+            
+            tablaHTML += '</tbody></table>';
+            
+            pistaTabla.innerHTML = tablaHTML;
+            pistaModal.showModal();
+        }
+
+        function cerrarModalPista() {
+            pistaModal.close();
+        }
+
+        // --- Funciones para el diálogo de opciones ---
+        function mostrarOpciones() {
+            opcionesModal.showModal();
+        }
+
+        function cargarAvance() {
+            opcionesModal.close();
+            // Cargar el reto donde el usuario se quedó
+            cargarReto(retosCompletados);
+        }
+
+        function reiniciarAvance() {
+            opcionesModal.close();
+            localStorage.removeItem('retosCompletados');
+            retosCompletados = 0;
+            // Recargar la página para comenzar desde el principio
+            window.location.reload();
+        }
+        
         function init() {
             messageDiv = document.getElementById('reto-message');
             userChartContainer = document.getElementById('user-chart-container');
             retoTitle = document.getElementById('reto-title');
+            evaluarBtn = document.getElementById('evaluar-btn');
+            siguienteBtn = document.getElementById('siguiente-btn');
+            pistaBtn = document.getElementById('pista-btn');
+            pistaModal = document.getElementById('pista-modal');
+            pistaTabla = document.getElementById('pista-tabla');
+            opcionesModal = document.getElementById('opciones-modal'); // Referencia al nuevo modal
             
             const savedProgress = localStorage.getItem('retosCompletados');
             if (savedProgress !== null) {
                 retosCompletados = parseInt(savedProgress);
             }
 
+            // Inicializa Blockly primero para que el div siempre esté visible.
             workspace = Blockly.inject('blocklyDiv', {
                 media: './node_modules/blockly/media/',
                 toolbox: toolbox,
             });
             
-            cargarReto(retoActual);
+            // Luego, maneja la lógica de progreso y carga del reto.
+            checkProgressAndShowDialog();
             
             window.addEventListener('resize', () => Blockly.svgResize(workspace));
+        }
+
+        function checkProgressAndShowDialog() {
+            if (retosCompletados > 0 && !opcionesModal.open) {
+                 mostrarOpciones();
+            } else {
+                 cargarReto(0);
+            }
         }
 
         if (typeof google === 'object') {
             google.load('visualization', '1', { packages: ['corechart'] });
             google.setOnLoadCallback(init);
         }
+        
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                // Re-ejecuta la lógica de progreso para mostrar el diálogo si es necesario
+                checkProgressAndShowDialog();
+            }
+        });
     </script>
 </body>
 </html>
