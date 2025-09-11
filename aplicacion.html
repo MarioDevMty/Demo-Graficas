@@ -15,10 +15,20 @@
             text-align: center;
         }
 
+        .graficas-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        
         #reto-chart, #user-chart {
+            width: 400px;
+            height: 400px;
             margin-bottom: 20px;
         }
-
+        
         #reto-message {
             margin-top: 20px;
             font-weight: bold;
@@ -89,17 +99,22 @@
             <h3 id="reto-title"></h3>
 
             <div id="reto-container">
-                <div id="reto-chart" style="width: 400px; height: 400px;"></div>
+                <div class="graficas-container">
+                    <div>
+                        <h4>Gráfica del Reto</h4>
+                        <div id="reto-chart"></div>
+                    </div>
+                    <div id="user-chart-container" style="display: none;">
+                        <h4>Tu Gráfica</h4>
+                        <div id="user-chart"></div>
+                    </div>
+                </div>
+
                 <div id="reto-message"></div>
                 
                 <div id="blocklyDiv" style="height: 400px; width: 100%;"></div>
                 
                 <button onclick="evaluarReto()" class="action-btn">Evaluar</button>
-            </div>
-            
-            <div id="user-chart-container" style="display: none;">
-                <h3>Tu Gráfica:</h3>
-                <div id="user-chart" style="width: 400px; height: 400px;"></div>
             </div>
         </div>
     </main>
@@ -121,34 +136,49 @@
     </xml>
     
     <script>
-        // Declaración de variables globales
+        // Hemos añadido propiedades de ploteo y visualización a cada reto
         const retos = [
-    {
-        formula: 'x + 4',
-        nombre: 'Función Lineal',
-        bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">4</field></block></value></block>'
-    },
-    {
-        formula: 'Math.pow(x, 2) + 6',
-        nombre: 'Función Cuadrática',
-        bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">6</field></block></value></block>'
-    },
-    {
-        formula: 'Math.sqrt(x)',
-        nombre: 'Función Raíz Cuadrada',
-        bloques: '<block type="math_single"><field name="OP">ROOT</field><value name="NUM"><block type="graph_get_x"></block></value></block>'
-    },
-    {
-        formula: 'Math.pow(x, 3) + 2',
-        nombre: 'Función Cúbica',
-        bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">3</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block>'
-    },
-    {
-        formula: 'x - 5 / x',
-        nombre: 'Función Racional',
-        bloques: '<block type="math_arithmetic"><field name="OP">MINUS</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_arithmetic"><field name="OP">DIVIDE</field><value name="A"><block type="math_number"><field name="NUM">5</field></block></value><value name="B"><block type="graph_get_x"></block></value></block></value></block>'
-    }
-];
+            {
+                formula: 'x + 4',
+                nombre: 'Función Lineal',
+                plotXMin: -10, plotXMax: 10,
+                viewXMin: -10, viewXMax: 10,
+                viewYMin: -10, viewYMax: 10,
+                bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">4</field></block></value></block>'
+            },
+            {
+                formula: 'Math.pow(x, 2) + 6',
+                nombre: 'Función Cuadrática',
+                plotXMin: -20, plotXMax: 20,
+                viewXMin: -10, viewXMax: 10,
+                viewYMin: 0, viewYMax: 100,
+                bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">6</field></block></value></block>'
+            },
+            {
+                formula: 'Math.sqrt(x)',
+                nombre: 'Función Raíz Cuadrada',
+                plotXMin: 0, plotXMax: 20,
+                viewXMin: 0, viewXMax: 20,
+                viewYMin: 0, viewYMax: 10,
+                bloques: '<block type="math_single"><field name="OP">ROOT</field><value name="NUM"><block type="graph_get_x"></block></value></block>'
+            },
+            {
+                formula: 'Math.pow(x, 3) + 2',
+                nombre: 'Función Cúbica',
+                plotXMin: -10, plotXMax: 10,
+                viewXMin: -10, viewXMax: 10,
+                viewYMin: -100, viewYMax: 100,
+                bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">3</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block>'
+            },
+            {
+                formula: 'x - 5 / x',
+                nombre: 'Función Racional',
+                plotXMin: -10, plotXMax: 10,
+                viewXMin: -10, viewXMax: 10,
+                viewYMin: -20, viewYMax: 20,
+                bloques: '<block type="math_arithmetic"><field name="OP">MINUS</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_arithmetic"><field name="OP">DIVIDE</field><value name="A"><block type="math_number"><field name="NUM">5</field></block></value><value name="B"><block type="graph_get_x"></block></value></block></value></block>'
+            }
+        ];
 
         let retoActual = 0;
         let retosCompletados = 0;
@@ -157,7 +187,6 @@
         let userChartContainer;
         let retoTitle;
 
-        // Configuración de Blockly y bloques personalizados
         const toolbox = {
             kind: 'categoryToolbox',
             contents: [
@@ -177,18 +206,16 @@
             return 'y1 = ' + argument0 + ';';
         };
 
-        // ---
-
-        // Funciones de control de la aplicación
-
         /**
-         * Genera los puntos para la gráfica a partir de una fórmula.
+         * Genera los puntos para la gráfica a partir de una fórmula y un rango de x.
          * @param {string} formula La fórmula matemática como una cadena de texto.
+         * @param {number} xMin El valor mínimo del eje X para el cálculo.
+         * @param {number} xMax El valor máximo del eje X para el cálculo.
          * @returns {Array<Array>} Tabla de datos para Google Charts.
          */
-        function plotGraph(formula) {
+        function plotGraph(formula, xMin, xMax) {
             let table = [['x', 'y']];
-            for (let x = -10; x <= 10; x = Math.round((x + 0.1) * 10) / 10) {
+            for (let x = xMin; x <= xMax; x = Math.round((x + 0.1) * 10) / 10) {
                 let y;
                 try {
                     const f = new Function('x', `return ${formula};`);
@@ -205,23 +232,31 @@
             return table;
         }
 
-        /**
-         * Evalúa la fórmula creada por el usuario contra la fórmula del reto.
-         */
         function evaluarReto() {
+            const reto = retos[retoActual];
             const formulaAlumnoRaw = javascript.javascriptGenerator.workspaceToCode(workspace);
             const formulaAlumno = formulaAlumnoRaw.replace(/y1\s*=\s*/, '').replace(/;$/, '').trim();
-            const formulaReto = retos[retoActual].formula.trim();
-            
-            const dataUsuario = google.visualization.arrayToDataTable(plotGraph(formulaAlumno));
+
+            // Usamos los rangos de ploteo definidos en el reto
+            const dataUsuario = google.visualization.arrayToDataTable(plotGraph(formulaAlumno, reto.plotXMin, reto.plotXMax));
             userChartContainer.style.display = 'block';
+
+            // Usamos los rangos de visualización definidos en el reto para la gráfica del usuario
+            const userChartOptions = {
+                hAxis: { title: 'x', viewWindow: { min: reto.viewXMin, max: reto.viewXMax } },
+                vAxis: { title: 'y', viewWindow: { min: reto.viewYMin, max: reto.viewYMax } },
+                legend: { position: 'none' },
+                series: { 0: { color: 'blue' } }
+            };
+
             new google.visualization.LineChart(
                 document.getElementById('user-chart')
-            ).draw(dataUsuario, { series: { 0: { color: 'blue' } } });
+            ).draw(dataUsuario, userChartOptions);
 
-            const puntosReto = plotGraph(formulaReto);
-            const puntosAlumno = plotGraph(formulaAlumno);
-            const sonIguales = JSON.stringify(puntosReto) === JSON.stringify(puntosAlumno);
+            const puntosReto = plotGraph(reto.formula, reto.plotXMin, reto.plotXMax);
+            const puntosAlumno = plotGraph(formulaAlumno, reto.plotXMin, reto.plotXMax);
+            
+            const sonIguales = JSON.stringify(puntosReto.map(p => p.map(n => Math.round(n * 1000) / 1000))) === JSON.stringify(puntosAlumno.map(p => p.map(n => Math.round(n * 1000) / 1000)));
 
             messageDiv.className = '';
 
@@ -229,22 +264,18 @@
                 messageDiv.textContent = `¡Correcto! Has adivinado la función. 🎉`;
                 messageDiv.classList.add('correct');
                 
-                // Actualiza el progreso y lo guarda
                 if (retoActual === retosCompletados) {
                     retosCompletados++;
                     localStorage.setItem('retosCompletados', retosCompletados);
                 }
                 
-                setTimeout(siguienteReto, 2000); // Llama a la siguiente función después de 2 segundos
+                setTimeout(siguienteReto, 2000);
             } else {
                 messageDiv.textContent = 'Inténtalo de nuevo. La gráfica no es la correcta.';
                 messageDiv.classList.add('incorrect');
             }
         }
         
-        /**
-         * Pasa al siguiente reto o muestra un mensaje de finalización.
-         */
         function siguienteReto() {
             if (retoActual < retos.length - 1) {
                 cargarReto(retoActual + 1);
@@ -255,12 +286,7 @@
             userChartContainer.style.display = 'none';
         }
 
-        /**
-         * Carga y muestra un reto específico.
-         * @param {number} index El índice del reto a cargar.
-         */
         function cargarReto(index) {
-            // No permitir cargar retos no resueltos
             if (index > retosCompletados) {
                 return;
             }
@@ -272,24 +298,30 @@
             const reto = retos[retoActual];
             retoTitle.textContent = `Reto ${retoActual + 1}: ${reto.nombre}`;
             
-            const dataReto = google.visualization.arrayToDataTable(plotGraph(reto.formula));
+            // Usamos los rangos de visualización y ploteo definidos en el reto
+            const dataReto = google.visualization.arrayToDataTable(plotGraph(reto.formula, reto.plotXMin, reto.plotXMax));
+            const retoChartOptions = {
+                hAxis: { title: 'x', viewWindow: { min: reto.viewXMin, max: reto.viewXMax } },
+                vAxis: { title: 'y', viewWindow: { min: reto.viewYMin, max: reto.viewYMax } },
+                legend: { position: 'none' },
+                series: { 0: { color: 'green' } }
+            };
+
             new google.visualization.LineChart(
                 document.getElementById('reto-chart')
-            ).draw(dataReto, { series: { 0: { color: 'green' } } });
+            ).draw(dataReto, retoChartOptions);
 
             workspace.clear();
             const startBlockXml = document.getElementById('startBlocks');
             Blockly.Xml.domToWorkspace(startBlockXml, workspace);
 
+            userChartContainer.style.display = 'none';
             actualizarNavegacion();
         }
 
-        /**
-         * Actualiza la barra de navegación de retos.
-         */
         function actualizarNavegacion() {
             const navDiv = document.getElementById('reto-nav');
-            navDiv.innerHTML = ''; // Limpiar la barra de navegación anterior
+            navDiv.innerHTML = '';
 
             for (let i = 0; i < retos.length; i++) {
                 const link = document.createElement('a');
@@ -300,7 +332,6 @@
                     cargarReto(i);
                 };
 
-                // Asignar clases para la apariencia
                 if (i === retoActual) {
                     link.classList.add('active');
                 }
@@ -315,15 +346,11 @@
             }
         }
 
-        /**
-         * Inicializa la aplicación cuando Google Charts está listo.
-         */
         function init() {
             messageDiv = document.getElementById('reto-message');
             userChartContainer = document.getElementById('user-chart-container');
             retoTitle = document.getElementById('reto-title');
-
-            // Cargar el progreso guardado
+            
             const savedProgress = localStorage.getItem('retosCompletados');
             if (savedProgress !== null) {
                 retosCompletados = parseInt(savedProgress);
@@ -339,7 +366,6 @@
             window.addEventListener('resize', () => Blockly.svgResize(workspace));
         }
 
-        // Lógica principal de inicio
         if (typeof google === 'object') {
             google.load('visualization', '1', { packages: ['corechart'] });
             google.setOnLoadCallback(init);
