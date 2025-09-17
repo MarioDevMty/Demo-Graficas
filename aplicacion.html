@@ -180,14 +180,14 @@
                 </div>
 
                 <div id="reto-message"></div>
+                
+                <div id="blocklyDiv" style="height: 400px; width: 100%;"></div>
+                
                 <div id="button-container">
                     <button id="evaluar-btn" onclick="evaluarReto()" class="action-btn">Evaluar</button>
                     <button id="pista-btn" onclick="mostrarPista()" class="hint-button">Pista</button>
                     <button id="siguiente-btn" onclick="cargarSiguienteReto()" class="action-btn hidden">Siguiente</button>
                 </div>
-                <div id="blocklyDiv" style="height: 400px; width: 100%;"></div>
-                
-                
             </div>
         </div>
     </main>
@@ -202,7 +202,7 @@
 
     <dialog id="opciones-modal">
         <div class="modal-content">
-            <h3>¿Quieres continuar con tu progreso, o reinciar el avance?</h3>
+            <h3>¿Qué te gustaría hacer?</h3>
             <div class="button-group">
                 <button class="btn-continuar" onclick="cargarAvance()">Continuar</button>
                 <button class="btn-reiniciar" onclick="reiniciarAvance()">Reiniciar</button>
