@@ -5,10 +5,10 @@
     <title>Blockly Demo: Graph</title>
     <script src="https://www.google.com/jsapi"></script>
    
-    <script src="/node_modules/blockly/blockly_compressed.js"></script>
-    <script src="/node_modules/blockly/blocks_compressed.js"></script>
-    <script src="/node_modules/blockly/javascript_compressed.js"></script>
-    <script src="/node_modules/blockly/msg/en.js"></script>
+    <script src="node_modules/blockly/blockly_compressed.js"></script>
+    <script src="node_modules/blockly/blocks_compressed.js"></script>
+    <script src="node_modules/blockly/javascript_compressed.js"></script>
+    <script src="node_modules/blockly/msg/en.js"></script>
     
     
     <!-- <script src="./node_modules/blockly/blockly_compressed.js"></script>
@@ -654,7 +654,7 @@ function updateFunctionDisplay() {
         Graph.workspace = Blockly.inject('blocklyDiv', {
           collapse: false,
           disable: false,
-          media: './node_modules/blockly/media/',
+          media: 'node_modules/blockly/media/',
           toolbox: toolbox,
           theme: Blockly.Theme.Modern,
           renderer: 'zelos',
