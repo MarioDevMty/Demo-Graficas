@@ -8,183 +8,227 @@
     <script src="./node_modules/blockly/blocks_compressed.js"></script>
     <script src="./node_modules/blockly/javascript_compressed.js"></script>
     <script src="./node_modules/blockly/msg/en.js"></script>
+    <script src="https://unpkg.com/@blockly/theme-modern@6.0.6/dist/index.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
-    <style>
-      .intro-image-container {
-        display: none;
-        width: 100%;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        box-sizing: border-box;
-      }
-      .intro-image-container img {
-        width: 100%;
-        height: auto;
-        border: 2px solid #3498db;
-        border-radius: 8px;
-      }
-      .examples-container {
-        margin-top: 20px;
-        padding: 20px;
-        background-color: #f0f4f8;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        text-align: center;
-      }
-      .example {
-        display: none; /* Por defecto, todos los ejemplos están ocultos */
-        margin-bottom: 20px;
-        padding: 15px;
-        background-color: #ffffff;
-        border: 1px solid #e0e6ed;
-        border-radius: 8px;
-      }
-      .example.active {
-          display: block; /* Muestra el ejemplo activo */
-      }
-      .example-title {
-        font-size: 1.2em;
-        font-weight: bold;
-        color: #2c3e50;
-        margin-bottom: 10px;
-      }
-      .example-blocks img {
-        max-width: 100%;
-        height: auto;
-      }
-
-      /* Estilos para la nueva barra de navegación de ejemplos */
-      .example-nav {
-          display: flex;
-          justify-content: center;
-          margin-bottom: 20px;
-      }
-      .example-nav button {
-          background-color: #fff;
-          border: 1px solid #ddd;
-          border-radius: 50%;
-          width: 40px;
-          height: 40px;
-          margin: 0 5px;
-          font-size: 1em;
-          font-weight: bold;
-          cursor: pointer;
-          transition: background-color 0.3s, transform 0.2s;
-      }
-      .example-nav button.active, .example-nav button:hover {
-          background-color: #3498db;
-          color: #fff;
-          transform: scale(1.1);
-      }
-    </style>
   </head>
   <body>
-    <nav class="nav-dots">
+    <div>
+      <nav class="nav-dots">
         <ul>
-            <li><a href="index.html" >1</a></li>
-            <li><a href="teoria.html">2</a></li>
-            <li><a href="grafico.html" class="active">3</a></li>
-            <li><a href="aplicacion.html">4</a></li>
-            <li><a href="evaluacion.html">5</a></li>
+          <li><a href="index.html" >1</a></li>
+          <li><a href="teoria.html">2</a></li>
+          <li><a href="grafico.html" class="active">3</a></li>
+          <li><a href="aplicacion.html">4</a></li>
+          <li><a href="evaluacion.html">5</a></li>
         </ul>
-    </nav>
-    <p>
-      Programa la función que quieras representar en el área de la gráfica
-    </p>
-    <p>
-      &rarr; Puedes usar las variables y los operadores matemáticos básicos.
-    </p>
-
-    <button onclick="startTutorial()" class="action-btn">Iniciar Tutorial</button>
-
-    <div id="tutorial-intro-container" class="intro-image-container" data-intro="¡Bienvenido al tutorial! Primero, analizaremos la interfaz para que te familiarices con las áreas de trabajo." data-step="1">
-        <img src="assets/blockly-tour.png" alt="Área de trabajo de Blockly">
-        <p>
-          1. **Caja de Herramientas:** Los bloques de programación están en el lado izquierdo.
-          <br>2. **Área de Programación:** En el centro, es donde creas tu función.
-          <br>3. **Área de la Gráfica:** En el lado derecho, donde ves el resultado de tu código.
-        </p>
-    </div> 
-    
-    <hr>
-    
-    <table>
-      <tr>
-        <td id="blocklyTd">
-          <div id="blocklyDiv" style="height: 400px" data-intro="En este espacio puedes arrastrar y unir los bloques de la caja de herramientas para construir tu función." data-step="2"></div>
-        </td>
-        <td id="graphTd">
-          <div id="visualization" style="width: 400px" data-intro="Aquí se mostrará la gráfica de la función que programes. ¡Verás los resultados en tiempo real!" data-step="3"></div>
-        </td>
-      </tr>
-    </table>
-    
-    <div class="examples-container">
-        <h2>Ejemplos para Emular</h2>
-        
-        <div class="example-nav" data-intro="Usa estos botones para navegar entre los diferentes ejemplos. Observa cada uno y trata de replicarlo en el área de trabajo de Blockly." data-step="4">
-            <button onclick="showExample(1)" class="active">1</button>
-            <button onclick="showExample(2)">2</button>
-            <button onclick="showExample(3)">3</button>
-            <button onclick="showExample(4)">4</button>
-            <button onclick="showExample(5)">5</button>
-        </div>
-        
-        <div class="examples-content-wrapper">
-            <div id="example-1" class="example active">
-                <div class="example-title">Función: $$y = x^2 + 5$$</div>
-                <div class="example-blocks">
-                    <img src="assets/y=x^2+5.png" alt="Bloques para y=x^2+5">
-                </div>
-            </div>
-
-            <div id="example-2" class="example">
-                <div class="example-title">Función: $$y = x - 2$$</div>
-                <div class="example-blocks">
-                    <img src="assets/y=x-2.png" alt="Bloques para y=x-2">
-                </div>
-            </div>
-
-            <div id="example-3" class="example">
-                <div class="example-title">Función: $$y = \frac{2}{3}x + 1$$</div>
-                <div class="example-blocks">
-                    <img src="assets/y=23x+1.png" alt="Bloques para y=2/3x+1">
-                </div>
-            </div>
-            
-            <div id="example-4" class="example">
-                <div class="example-title">Función: $$y = \sqrt{x}$$</div>
-                <div class="example-blocks">
-                    <img src="assets/y=sqrtx.png" alt="Bloques para y=sqrt(x)">
-                </div>
-            </div>
-            
-            <div id="example-5" class="example">
-                <div class="example-title">Función: $$y = x^3 + 2$$</div>
-                <div class="example-blocks">
-                    <img src="assets/y=x^3+2.png" alt="Bloques para y=x^3+2">
-                </div>
-            </div>
-        </div>
+      </nav>
     </div>
     
+    <div class="main-content">
+      <div id="Titulo" class="titulo_parrafo">
+        <p>
+          Usa los bloques para conectar los elementos de una función.
+        </p>
+        <p>
+          Encontraras lo necesario para realizar las funciones. ¡Diviertete!
+        </p>
+      </div>
+    </div>
+    
+    <div class="center-container">
+      <button onclick="startTutorial()" class="action-btn">Iniciar Tutorial</button>
+    </div>
+    
+    <hr>
+    <div class="examples-container">
+      <h2>Ejemplos para practicar y comprender</h2>
+      
+      <div class="example-nav" data-intro="Usa estos botones para navegar entre los diferentes ejemplos. Observa cada uno y trata de replicarlo en el área de trabajo de Blockly." data-step="4">
+          <button onclick="showExample(1)" class="active">1</button>
+          <button onclick="showExample(2)">2</button>
+          <button onclick="showExample(3)">3</button>
+          <button onclick="showExample(4)">4</button>
+          <button onclick="showExample(5)">5</button>
+      </div>
+      
+      <div class="examples-content-wrapper">
+          
+          <div id="example-1" class="example">
+            <table>
+              <thead>
+                <tr>
+                  <th>Función</th>
+                  <th>Bloques</th>
+                  <th>Gráfica</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="example-title">$$y = x - 2$$</div>
+                  </td>
+                  <td>
+                    <div class="example-blocks">
+                      <img src="assets/bloque_y=x-2.png"  alt="Bloques para y=x-2">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="example-graph">
+                      <img src="assets/grafica_y=x-2.png" height="65%" width="65%" alt="Gráfica para y=x-2">
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="example-2" class="example active">
+            <table>
+              <thead>
+                <tr>
+                  <th>Función</th>
+                  <th>Bloques</th>
+                  <th>Gráfica</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="example-title">$$y = x^2 + 5$$</div>
+                  </td>
+                  <td>
+                    <div class="example-blocks">
+                      <img src="assets/bloque_y=x^2+5.png" alt="Bloques para y=x^2+5">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="example-graph">
+                      <img src="assets/grafica_y=x^2+5.png" height="65%" width="65%" alt="Gráfica para y=x^2+5">
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          
+          
+          <div id="example-3" class="example">
+            <table>
+              <thead>
+                <tr>
+                  <th>Función</th>
+                  <th>Bloques</th>
+                  <th>Gráfica</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="example-title">$$y = \sqrt{x}$$</div>
+                  </td>
+                  <td>
+                    <div class="example-blocks">
+                      <img src="assets/bloque_y=sqrtx.png" alt="Bloques para y=sqrt(x)">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="example-graph">
+                      <img src="assets/grafica_y=sqrtx.png" height="65%" width="65%" alt="Gráfica para y=sqrt(x)">
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div id="example-4" class="example">
+            <table>
+              <thead>
+                <tr>
+                  <th>Función</th>
+                  <th>Bloques</th>
+                  <th>Gráfica</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="example-title">$$y = x^3 + 2$$</div>
+                  </td>
+                  <td>
+                    <div class="example-blocks">
+                      <img src="assets/bloque_y=x^3+2.png" alt="Bloques para y=x^3+2">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="example-graph">
+                      <img src="assets/grafica_y=x^3+2.png" height="65%" width="65%" alt="Gráfica para y=x^3+2">
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+      <div id="example-5" class="example">
+        <table>
+          <thead>
+            <tr>
+              <th>Función</th>
+              <th>Bloques</th>
+              <th>Gráfica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="example-title">$$y = \frac{2}{3}x + 1$$</div>
+              </td>
+              <td>
+                <div class="example-blocks">
+                  <img src="assets/bloque_y=23x+1.png" alt="Bloques para y=2/3x+1">
+                </div>
+              </td>
+              <td>
+                <div class="example-graph">
+                  <img src="assets/grafica_y=23x+1.png" height="65%" width="65%" alt="Gráfica para y=2/3x+1">
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    
+    
+    
+    
+    
+    </div>
+    
+    <!---------------------------------Espacio para el area de trabajo de bloques y grafica-------------------------->
+    
+    <div class="blockly-and-graph-container">
+      <div id="blocklyDiv" style="height: 400px;" data-intro="En este espacio puedes arrastrar y unir los bloques de la caja de herramientas para construir tu función." data-step="2"></div>
+      <div id="visualization" style="width: 400px;" data-intro="Aquí se mostrará la gráfica de la función que programes. ¡Verás los resultados en tiempo real!" data-step="3"></div>
+    </div>
+    
+    <!------------------------------------------Espacio para cargar los graficas----------------------------------------->
     <script>
-      // Load the Google Chart Tools Visualization API and the chart package.
+      // Carga Google Chart Tools Visualizar API y la grafica.
       if (typeof google == 'object') {
         google.load('visualization', '1', {packages: ['corechart']});
       } else {
         alert(
-          "Unable to load Google's chart API.\n" +
-            'Are you connected to the Internet?',
+          "No se puede cargarGoogle's chart API.\n" +
+            '¿Tienes conexión a internet?',
         );
       }
 
-      // Define the toolbox
+    /*------------------------Espacio para la definición del toolbox --------------------------------*/
       const toolbox = {
         kind: 'categoryToolbox',
         contents: [
@@ -548,8 +592,8 @@
        * Force Blockly to resize into the available width.
        */
       Graph.resize = function () {
-        var width = Math.max(window.innerWidth - 440, 250);
-        document.getElementById('blocklyDiv').style.width = width + 'px';
+        //var width = Math.max(window.innerWidth - 440, 250);
+        //document.getElementById('blocklyDiv').style.width = width + 'px';
         Blockly.svgResize(Graph.workspace);
       };
 
@@ -562,6 +606,8 @@
           disable: false,
           media: './node_modules/blockly/media/',
           toolbox: toolbox,
+          theme: Blockly.Theme.Modern,
+          renderer: 'zelos',
         });
 
         Blockly.serialization.workspaces.load(startBlocks, Graph.workspace);

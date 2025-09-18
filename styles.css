@@ -1,3 +1,126 @@
+/*ESTILOS DE PAGINA GRAFICO*/
+
+/*------Estilos de tabla-----------------*/
+
+.examples-content-wrapper {
+    display: flex; /* Habilita el modelo de caja flexible */
+    width: 100%; /* Ocupa el 100% del ancho del padre */
+  }
+  table {
+    width: 100%; /* La tabla ocupa todo el ancho de su contenedor */
+    table-layout: fixed; /* Asegura que el ancho de las celdas sea igual */
+    border-collapse: collapse; /* Elimina el espacio entre los bordes de las celdas */
+  }
+  
+  th, td {
+    padding: 8px; /* Agrega un poco de espacio interno */
+    text-align: center; /* Centra el contenido de las celdas */
+    border: 1px solid #ccc; /* Agrega bordes para visualización */
+  }
+
+
+/*---------------------------Espacio de trabajo de la grafica---------------------*/
+.blockly-and-graph-container {
+    display: flex;
+    justify-content: space-between; /* Distribuye el espacio entre los elementos */
+    align-items: flex-start;
+    width: 100%;
+    gap: 20px; /* Mantiene el espacio entre los dos divs */
+  }
+  
+  #blocklyDiv {
+    flex-basis: 70%; /* Ocupa el 70% del ancho inicial */
+    flex-grow: 1; /* Permite que el bloque crezca para llenar el espacio */
+  }
+  
+  #visualization {
+    flex-basis: 30%; /* Ocupa el 30% del ancho inicial */
+    flex-grow: 1; /* Permite que la gráfica crezca para llenar el espacio */
+  }
+/*------------------------------------------------------------------------------------*/
+
+  .example {
+    flex-grow: 1; /* Permite que el elemento se estire para llenar el espacio */
+    margin: 0 10px; /* Opcional: añade un poco de espacio entre cada ejemplo */
+  }
+.center-container {
+    display: flex;
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra el contenido verticalmente (si el div tiene altura) */
+    width: 100%; /* Opcional: asegura que el div ocupe todo el ancho */
+    margin: 0 auto;
+  }
+.main-content {
+    margin-top: 80px; /* Ajusta este valor si la altura de tu nav es diferente */
+  }
+
+.intro-image-container {
+    display: none;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .intro-image-container img {
+    width: 100%;
+    height: auto;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+  }
+  .examples-container {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f0f4f8;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  .example {
+    display: none; /* Por defecto, todos los ejemplos están ocultos */
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #e0e6ed;
+    border-radius: 8px;
+  }
+  .example.active {
+      display: block; /* Muestra el ejemplo activo */
+  }
+  .example-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  .example-blocks img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Estilos para la nueva barra de navegación de ejemplos */
+  .example-nav {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+  }
+  .example-nav button {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin: 0 5px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+  }
+  .example-nav button.active, .example-nav button:hover {
+      background-color: #3498db;
+      color: #fff;
+      transform: scale(1.1);}
+
 /* Estilos generales para un aspecto limpio */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
