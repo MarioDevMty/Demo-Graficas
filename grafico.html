@@ -202,15 +202,12 @@
           </tbody>
         </table>
       </div>
-    
-    
-    
-    
-    
     </div>
     
     <!---------------------------------Espacio para el area de trabajo de bloques y grafica-------------------------->
-    
+    <div id="functionDisplay" class="function-display">
+    </div>
+
     <div class="blockly-and-graph-container">
       <div id="blocklyDiv" style="height: 400px;" data-intro="En este espacio puedes arrastrar y unir los bloques de la caja de herramientas para construir tu función." data-step="2"></div>
       <div id="visualization" style="width: 400px;" data-intro="Aquí se mostrará la gráfica de la función que programes. ¡Verás los resultados en tiempo real!" data-step="3"></div>
@@ -498,6 +495,45 @@
       };
 
       /**
+ * Traduce el código JavaScript de Blockly a una ecuación matemática en LaTeX.
+ * @param {string} code El código JavaScript generado por Blockly.
+ * @returns {string} La ecuación en formato LaTeX.
+ */
+function formatAsLatex(code) {
+  // Elimina "y1 = " y el punto y coma del inicio y final del código
+  let latexCode = code.replace(/^y1\s*=\s*/, '').replace(/;$/, '');
+
+  // Reemplaza las funciones comunes de JS por su equivalente en LaTeX
+  latexCode = latexCode.replace(/Math.pow\(([^,]+),\s*2\)/g, '$1^2');
+  latexCode = latexCode.replace(/Math.pow\(([^,]+),\s*3\)/g, '$1^3');
+  latexCode = latexCode.replace(/Math.sqrt\((.*?)\)/g, '\\sqrt{$1}');
+  
+  // Reemplaza los bloques de fracción personalizados (num / den) por LaTeX
+  latexCode = latexCode.replace(/\((\d+)\s*\/\s*(\d+)\)/g, '\\frac{$1}{$2}');
+  
+  return `$$y = ${latexCode}$$`;
+}
+
+/**
+ * Obtiene el código de Blockly, lo formatea y lo muestra en la página.
+ */
+function updateFunctionDisplay() {
+  const code = javascript.javascriptGenerator.workspaceToCode(Graph.workspace);
+  const latex = formatAsLatex(code);
+  const displayElement = document.getElementById('functionDisplay');
+  displayElement.innerHTML = latex;
+  // Vuelve a renderizar la ecuación con MathJax
+  MathJax.typesetPromise([displayElement]);
+}
+
+
+
+
+
+
+
+
+      /**
        * Create a namespace for the application.
        */
       var Graph = {};
@@ -615,9 +651,12 @@
 
         // When Blockly changes, update the graph.
         Graph.workspace.addChangeListener(Graph.drawVisualization);
+         // Esta línea es la que escucha los cambios en los bloques.
+        Graph.workspace.addChangeListener(updateFunctionDisplay); 
         Graph.workspace.addChangeListener(Blockly.Events.disableOrphans);
         Graph.resize();
-
+        //formula a latex
+        updateFunctionDisplay();
         // Muestra el primer ejemplo por defecto
         showExample(1);
       };
@@ -647,6 +686,17 @@
             introJs().start();
           }, 500);
       }
+
+
+
+
+
+
+
+
+
+
+
 
       window.addEventListener('load', Graph.init);
       window.addEventListener('resize', Graph.resize);

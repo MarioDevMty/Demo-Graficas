@@ -17,8 +17,13 @@
     text-align: center; /* Centra el contenido de las celdas */
     border: 1px solid #ccc; /* Agrega bordes para visualización */
   }
-
-
+/*-------------------------Contendor de la formula creada------------*/
+.function-display {
+    font-size: 2em; /* Hace la fuente de la ecuación más grande */
+    text-align: center; /* Centra la ecuación */
+    margin: 20px 0; /* Agrega espacio por encima y por debajo */
+    min-height: 40px; /* Asegura que el div no se colapse cuando está vacío */
+  }
 /*---------------------------Espacio de trabajo de la grafica---------------------*/
 .blockly-and-graph-container {
     display: flex;
