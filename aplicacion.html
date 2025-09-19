@@ -14,9 +14,6 @@
     <script src="https://unpkg.com/@blockly/theme-modern@7.0.1/dist/index.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
-    
    
 </head>
 <body>
@@ -59,11 +56,9 @@
 
             <hr>
             
-                
             <div id="functionDisplay" class="function-display"></div>
             <div class="blockly-and-graph-container">
-                <div id="blocklyDiv" style="height: 400px; width: 100%;" data-intro="En este espacio puedes arrastrar y unir los bloques de la caja de herramientas para construir tu función." data-step="2"></div>
-                <div id="visualization" style="width: 400px;" data-intro="Aquí se mostrará la gráfica de la función que programes. ¡Verás los resultados en tiempo real!" data-step="3"></div>
+                <div id="blocklyDiv" style="height: 400px; width: 100%;"></div>
             </div>
             
         </div>
@@ -420,7 +415,6 @@
         function evaluarCambios() {
             const code = javascript.javascriptGenerator.workspaceToCode(workspace);
             updateFunctionDisplay();
-            Graph.drawVisualization();
         }
         
         function checkProgressAndShowDialog() {
@@ -431,64 +425,6 @@
             }
         }
         
-        // Funciones para la segunda parte del código (tutorial/ejemplos)
-        function showExample(exampleNumber) {
-            const allExamples = document.querySelectorAll('.example');
-            allExamples.forEach(el => el.classList.remove('active'));
-            const allButtons = document.querySelectorAll('.example-nav button');
-            allButtons.forEach(btn => btn.classList.remove('active'));
-            const selectedExample = document.getElementById(`example-${exampleNumber}`);
-            const selectedButton = document.querySelector(`.example-nav button:nth-child(${exampleNumber})`);
-            if (selectedExample && selectedButton) {
-                selectedExample.classList.add('active');
-                selectedButton.classList.add('active');
-            }
-        }
-
-        function startTutorial() {
-            setTimeout(() => {
-                introJs().start();
-            }, 500);
-        }
-
-        // Namespace y funciones de Google Charts
-        var Graph = {};
-        Graph.workspace = null;
-        Graph.oldFormulas_ = null;
-        Graph.options_ = {
-            width: 400,
-            height: 400,
-            chartArea: {left: '10%', width: '85%', height: '85%'},
-            series: { 0: {color: '#36c'} },
-        };
-        Graph.drawVisualization = function () {
-            var formulas = javascript.javascriptGenerator.workspaceToCode(workspace);
-            if (formulas === Graph.oldFormulas_) return;
-            Graph.oldFormulas_ = formulas;
-            var data = google.visualization.arrayToDataTable(Graph.plot(formulas));
-            new google.visualization.LineChart(document.getElementById('visualization')).draw(data, Graph.options_);
-        };
-        Graph.plot = function (codes) {
-            var table = [['x', 'y']];
-            for (var x = -10; x <= 10; x = Math.round((x + 0.1) * 10) / 10) {
-                try {
-                    var y1;
-                    eval(codes);
-                } catch (e) {
-                    y1 = NaN;
-                }
-                var row = [x];
-                if (!isNaN(y1)) {
-                    row.push(Math.round(y1 * Math.pow(10, 14)) / Math.pow(10, 14));
-                } else {
-                    row.push(null);
-                }
-                if (row.length > 1) table.push(row);
-            }
-            if (table.length === 1) table.push([0, 0]);
-            return table;
-        };
-
         if (typeof google === 'object') {
             google.load('visualization', '1', { packages: ['corechart'] });
             google.setOnLoadCallback(init);
@@ -499,7 +435,6 @@
                 checkProgressAndShowDialog();
             }
         });
-        
     </script>
 </body>
 </html>
