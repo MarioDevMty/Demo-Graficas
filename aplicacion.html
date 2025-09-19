@@ -5,148 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABR - Plataforma de Funciones</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Estilos generales para la página de evaluación */
-        #reto-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .graficas-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
-            flex-wrap: wrap;
-        }
-        
-        #reto-chart, #user-chart {
-            width: 400px;
-            height: 400px;
-            margin-bottom: 20px;
-        }
-        
-        #reto-message {
-            margin-top: 20px;
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .correct {
-            color: green;
-        }
-
-        .incorrect {
-            color: red;
-        }
-
-        /* Estilos para la barra de navegación de retos */
-        #reto-nav {
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        #reto-nav a {
-            padding: 8px 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #333;
-            background-color: #f9f9f9;
-        }
-
-        #reto-nav a.active {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-
-        #reto-nav a.completed {
-            background-color: #28a745;
-            color: white;
-            border-color: #28a745;
-        }
-
-        #reto-nav a.disabled {
-            pointer-events: none;
-            opacity: 0.5;
-            background-color: #ccc;
-        }
-        .hidden {
-            display: none;
-        }
-
-        /* --- Estilos para el botón y los modales con <dialog> --- */
-        .hint-button {
-            background-color: #f0ad4e;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* Estilo del contenido dentro de los <dialog> */
-        dialog .modal-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            position: relative;
-            max-width: 400px;
-            text-align: center;
-        }
-        
-        /* Estilo del fondo semitransparente para ambos diálogos */
-        dialog::backdrop {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        #pista-tabla {
-            margin-top: 10px;
-        }
-
-        #pista-tabla table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        #pista-tabla th, #pista-tabla td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: center;
-        }
-
-        /* Estilos para el nuevo diálogo de opciones */
-        #opciones-modal .button-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .btn-continuar, .btn-reiniciar {
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            color: white;
-        }
-
-        .btn-continuar {
-            background-color: #007bff;
-        }
-
-        .btn-reiniciar {
-            background-color: #dc3545;
-        }
-    </style>
+    
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="https://unpkg.com/blockly@12.0.0/blockly_compressed.js"></script>
+    <script src="https://unpkg.com/blockly@12.0.0/blocks_compressed.js"></script>
+    <script src="https://unpkg.com/blockly@12.0.0/javascript_compressed.js"></script>
+    <script src="https://unpkg.com/blockly@12.0.0/msg/es.js"></script>
+    <script src="https://unpkg.com/@blockly/theme-modern@7.0.1/dist/index.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/introjs.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/7.2.0/intro.min.js"></script>
+    
+   
 </head>
 <body>
     <nav class="nav-dots">
@@ -163,7 +34,7 @@
         <div class="content-page">
             <h2>ABR - Analiza y construye la funcion de la Gráfica</h2>
             <p>Usa los bloques para crear la función que corresponde a la gráfica que se muestra. Cuando termines de construir la funcion, presiona "Evaluar".</p>
-
+            
             <div id="reto-nav"></div>
             <h3 id="reto-title"></h3>
 
@@ -178,17 +49,23 @@
                         <div id="user-chart"></div>
                     </div>
                 </div>
-
                 <div id="reto-message"></div>
-                
-                <div id="blocklyDiv" style="height: 400px; width: 100%;"></div>
-                
                 <div id="button-container">
                     <button id="evaluar-btn" onclick="evaluarReto()" class="action-btn">Evaluar</button>
                     <button id="pista-btn" onclick="mostrarPista()" class="hint-button">Pista</button>
                     <button id="siguiente-btn" onclick="cargarSiguienteReto()" class="action-btn hidden">Siguiente</button>
                 </div>
             </div>
+
+            <hr>
+            
+                
+            <div id="functionDisplay" class="function-display"></div>
+            <div class="blockly-and-graph-container">
+                <div id="blocklyDiv" style="height: 400px; width: 100%;" data-intro="En este espacio puedes arrastrar y unir los bloques de la caja de herramientas para construir tu función." data-step="2"></div>
+                <div id="visualization" style="width: 400px;" data-intro="Aquí se mostrará la gráfica de la función que programes. ¡Verás los resultados en tiempo real!" data-step="3"></div>
+            </div>
+            
         </div>
     </main>
     
@@ -210,23 +87,16 @@
         </div>
     </dialog>
 
-    <script src="https://www.google.com/jsapi"></script>
-    <script src="./node_modules/blockly/blockly_compressed.js"></script>
-    <script src="./node_modules/blockly/blocks_compressed.js"></script>
-    <script src="./node_modules/blockly/javascript_compressed.js"></script>
-    <script src="./node_modules/blockly/msg/en.js"></script>
-
     <xml xmlns="https://developers.google.com/blockly/xml" id="startBlocks" style="display: none">
         <block type="graph_set_y1" deletable="false" x="100" y="100">
             <value name="VALUE">
-                <block type="math_number">
-                    <field name="NUM">0</field>
-                </block>
+                <block type="math_number"><field name="NUM">0</field></block>
             </value>
         </block>
     </xml>
     
     <script>
+        // Resto del código JavaScript...
         const retos = [
             {
                 formula: 'x + 4',
@@ -281,26 +151,63 @@
         let pistaBtn;
         let pistaModal;
         let pistaTabla;
-        let opcionesModal; 
-
+        let opcionesModal;
+        
         const toolbox = {
             kind: 'categoryToolbox',
             contents: [
-                { kind: 'category', name: 'Matemáticas', colour: '%{BKY_MATH_HUE}', contents: [{ kind: 'block', type: 'math_number' }, { kind: 'block', type: 'math_arithmetic' }, { kind: 'block', type: 'math_single' }, { kind: 'block', type: 'math_trig' }, { kind: 'block', type: 'math_constant' }] },
+                { kind: 'category', name: 'Matemáticas', colour: '%{BKY_MATH_HUE}', contents: [{ kind: 'block', type: 'math_number' }, { kind: 'block', type: 'math_arithmetic' }, { kind: 'block', type: 'math_single' }, { kind: 'block', type: 'math_trig' }, { kind: 'block', type: 'math_constant' }, { kind: 'block', type: 'math_fraction' }] },
                 { kind: 'category', name: 'Variables', colour: '%{BKY_VARIABLES_HUE}', contents: [{ kind: 'block', type: 'graph_get_x' }, { kind: 'block', type: 'graph_set_y1' }] },
+                { kind: 'category', name: 'Lógica', colour: '%{BKY_LOGIC_HUE}', contents: [{ kind: 'block', type: 'logic_compare' }, { kind: 'block', type: 'logic_operation' }, { kind: 'block', type: 'logic_negate' }, { kind: 'block', type: 'logic_boolean' }, { kind: 'block', type: 'logic_ternary' }] },
             ],
         };
 
         Blockly.defineBlocksWithJsonArray([
             { type: 'graph_get_x', message0: 'x', output: 'Number', colour: Blockly.Msg['VARIABLES_HUE'] },
             { type: 'graph_set_y1', message0: 'y = %1', args0: [{ type: 'input_value', name: 'VALUE', check: 'Number' }], colour: Blockly.Msg['VARIABLES_HUE'] },
+            {
+                type: 'math_fraction',
+                message0: 'fracción %1 / %2',
+                args0: [
+                    { type: 'input_value', name: 'NUMERATOR', check: 'Number' },
+                    { type: 'input_value', name: 'DENOMINATOR', check: 'Number' },
+                ],
+                output: 'Number',
+                colour: Blockly.Msg['MATH_HUE'],
+                tooltip: 'Calcula el valor de una fracción.',
+                helpUrl: '',
+            },
         ]);
+        
         javascript.javascriptGenerator.forBlock['graph_get_x'] = function (block) { return ['x', javascript.Order.ATOMIC]; };
         javascript.javascriptGenerator.forBlock['graph_set_y1'] = function (block, generator) {
             block.setDeletable(false);
             var argument0 = generator.valueToCode(block, 'VALUE', javascript.Order.ASSIGNMENT) || '0';
             return 'y1 = ' + argument0 + ';';
         };
+        javascript.javascriptGenerator.forBlock['math_fraction'] = function (block, generator) {
+            var numerator = generator.valueToCode(block, 'NUMERATOR', javascript.Order.DIVISION) || '0';
+            var denominator = generator.valueToCode(block, 'DENOMINATOR', javascript.Order.DIVISION) || '0';
+            var code = '(' + numerator + ' / ' + denominator + ')';
+            return [code, javascript.Order.DIVISION];
+        };
+
+        function formatAsLatex(code) {
+            let latexCode = code.replace(/^y1\s*=\s*/, '').replace(/;$/, '');
+            latexCode = latexCode.replace(/Math.pow\(([^,]+),\s*2\)/g, '$1^2');
+            latexCode = latexCode.replace(/Math.pow\(([^,]+),\s*3\)/g, '$1^3');
+            latexCode = latexCode.replace(/Math.sqrt\((.*?)\)/g, '\\sqrt{$1}');
+            latexCode = latexCode.replace(/\((\d+)\s*\/\s*(\d+)\)/g, '\\frac{$1}{$2}');
+            return `$$y = ${latexCode}$$`;
+        }
+
+        function updateFunctionDisplay() {
+            const code = javascript.javascriptGenerator.workspaceToCode(workspace);
+            const latex = formatAsLatex(code);
+            const displayElement = document.getElementById('functionDisplay');
+            displayElement.innerHTML = latex;
+            MathJax.typesetPromise([displayElement]);
+        }
 
         function plotGraph(formula, xMin, xMax) {
             let table = [['x', 'y']];
@@ -336,9 +243,7 @@
                 series: { 0: { color: 'blue' } }
             };
 
-            new google.visualization.LineChart(
-                document.getElementById('user-chart')
-            ).draw(dataUsuario, userChartOptions);
+            new google.visualization.LineChart(document.getElementById('user-chart')).draw(dataUsuario, userChartOptions);
 
             const puntosReto = plotGraph(reto.formula, reto.plotXMin, reto.plotXMax);
             const puntosAlumno = plotGraph(formulaAlumno, reto.plotXMin, reto.plotXMax);
@@ -402,15 +307,14 @@
                 series: { 0: { color: 'green' } }
             };
 
-            new google.visualization.LineChart(
-                document.getElementById('reto-chart')
-            ).draw(dataReto, retoChartOptions);
+            new google.visualization.LineChart(document.getElementById('reto-chart')).draw(dataReto, retoChartOptions);
 
             workspace.clear();
             const startBlockXml = document.getElementById('startBlocks');
             Blockly.Xml.domToWorkspace(startBlockXml, workspace);
-
+            
             actualizarNavegacion();
+            updateFunctionDisplay();
         }
 
         function actualizarNavegacion() {
@@ -443,9 +347,7 @@
         function mostrarPista() {
             const reto = retos[retoActual];
             let tablaHTML = '<table><thead><tr><th>X</th><th>Y</th></tr></thead><tbody>';
-
             const valoresX = [-2, -1, 0, 1, 2, 3];
-            
             const f = new Function('x', `return ${reto.formula};`);
             
             valoresX.forEach(x => {
@@ -455,7 +357,6 @@
             });
             
             tablaHTML += '</tbody></table>';
-            
             pistaTabla.innerHTML = tablaHTML;
             pistaModal.showModal();
         }
@@ -464,14 +365,12 @@
             pistaModal.close();
         }
 
-        // --- Funciones para el diálogo de opciones ---
         function mostrarOpciones() {
             opcionesModal.showModal();
         }
 
         function cargarAvance() {
             opcionesModal.close();
-            // Cargar el reto donde el usuario se quedó
             cargarReto(retosCompletados);
         }
 
@@ -479,7 +378,6 @@
             opcionesModal.close();
             localStorage.removeItem('retosCompletados');
             retosCompletados = 0;
-            // Recargar la página para comenzar desde el principio
             window.location.reload();
         }
         
@@ -492,32 +390,104 @@
             pistaBtn = document.getElementById('pista-btn');
             pistaModal = document.getElementById('pista-modal');
             pistaTabla = document.getElementById('pista-tabla');
-            opcionesModal = document.getElementById('opciones-modal'); // Referencia al nuevo modal
+            opcionesModal = document.getElementById('opciones-modal');
             
             const savedProgress = localStorage.getItem('retosCompletados');
             if (savedProgress !== null) {
                 retosCompletados = parseInt(savedProgress);
             }
 
-            // Inicializa Blockly primero para que el div siempre esté visible.
             workspace = Blockly.inject('blocklyDiv', {
-                media: './node_modules/blockly/media/',
+                media: 'https://unpkg.com/blockly@12.0.0/media/',
                 toolbox: toolbox,
+                theme: Blockly.Theme.Modern,
+                renderer: 'zelos',
+                collapse: false,
+                disable: false,
             });
+
+            const startBlockXml = document.getElementById('startBlocks');
+            Blockly.Xml.domToWorkspace(startBlockXml, workspace);
+
+            workspace.addChangeListener(evaluarCambios);
+            workspace.addChangeListener(Blockly.Events.disableOrphans);
             
-            // Luego, maneja la lógica de progreso y carga del reto.
             checkProgressAndShowDialog();
             
             window.addEventListener('resize', () => Blockly.svgResize(workspace));
         }
 
+        function evaluarCambios() {
+            const code = javascript.javascriptGenerator.workspaceToCode(workspace);
+            updateFunctionDisplay();
+            Graph.drawVisualization();
+        }
+        
         function checkProgressAndShowDialog() {
             if (retosCompletados > 0 && !opcionesModal.open) {
-                 mostrarOpciones();
+                mostrarOpciones();
             } else {
-                 cargarReto(0);
+                cargarReto(0);
             }
         }
+        
+        // Funciones para la segunda parte del código (tutorial/ejemplos)
+        function showExample(exampleNumber) {
+            const allExamples = document.querySelectorAll('.example');
+            allExamples.forEach(el => el.classList.remove('active'));
+            const allButtons = document.querySelectorAll('.example-nav button');
+            allButtons.forEach(btn => btn.classList.remove('active'));
+            const selectedExample = document.getElementById(`example-${exampleNumber}`);
+            const selectedButton = document.querySelector(`.example-nav button:nth-child(${exampleNumber})`);
+            if (selectedExample && selectedButton) {
+                selectedExample.classList.add('active');
+                selectedButton.classList.add('active');
+            }
+        }
+
+        function startTutorial() {
+            setTimeout(() => {
+                introJs().start();
+            }, 500);
+        }
+
+        // Namespace y funciones de Google Charts
+        var Graph = {};
+        Graph.workspace = null;
+        Graph.oldFormulas_ = null;
+        Graph.options_ = {
+            width: 400,
+            height: 400,
+            chartArea: {left: '10%', width: '85%', height: '85%'},
+            series: { 0: {color: '#36c'} },
+        };
+        Graph.drawVisualization = function () {
+            var formulas = javascript.javascriptGenerator.workspaceToCode(workspace);
+            if (formulas === Graph.oldFormulas_) return;
+            Graph.oldFormulas_ = formulas;
+            var data = google.visualization.arrayToDataTable(Graph.plot(formulas));
+            new google.visualization.LineChart(document.getElementById('visualization')).draw(data, Graph.options_);
+        };
+        Graph.plot = function (codes) {
+            var table = [['x', 'y']];
+            for (var x = -10; x <= 10; x = Math.round((x + 0.1) * 10) / 10) {
+                try {
+                    var y1;
+                    eval(codes);
+                } catch (e) {
+                    y1 = NaN;
+                }
+                var row = [x];
+                if (!isNaN(y1)) {
+                    row.push(Math.round(y1 * Math.pow(10, 14)) / Math.pow(10, 14));
+                } else {
+                    row.push(null);
+                }
+                if (row.length > 1) table.push(row);
+            }
+            if (table.length === 1) table.push([0, 0]);
+            return table;
+        };
 
         if (typeof google === 'object') {
             google.load('visualization', '1', { packages: ['corechart'] });
@@ -526,10 +496,10 @@
         
         window.addEventListener('pageshow', (event) => {
             if (event.persisted) {
-                // Re-ejecuta la lógica de progreso para mostrar el diálogo si es necesario
                 checkProgressAndShowDialog();
             }
         });
+        
     </script>
 </body>
 </html>
