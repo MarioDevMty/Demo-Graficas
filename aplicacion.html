@@ -5,20 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ABR - Plataforma de Funciones</title>
     <link rel="stylesheet" href="styles.css">
-    
+    <!--Inserción de todos los elementos que hacen funcionar blvkly y las graficas-->
     <script src="https://www.google.com/jsapi"></script>
     <script src="https://unpkg.com/blockly@12.0.0/blockly_compressed.js"></script>
     <script src="https://unpkg.com/blockly@12.0.0/blocks_compressed.js"></script>
     <script src="https://unpkg.com/blockly@12.0.0/javascript_compressed.js"></script>
     <script src="https://unpkg.com/blockly@12.0.0/msg/es.js"></script>
+    
     <script src="https://unpkg.com/@blockly/theme-modern@7.0.1/dist/index.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    
+    <!--************************************************************************************************************-->
     
 </head>
 <body>
-    <nav class="nav-dots">
+    
+    <header>  
+        <nav class="nav-dots">
         <ul>
             <li><a href="index.html">1</a></li>
             <li><a href="teoria.html">2</a></li>
@@ -27,7 +30,8 @@
             <li><a href="evaluacion.html">5</a></li>
         </ul>
     </nav>
-
+</header>
+  
     <main>
         <div class="content-page">
             <h2>ABR - Analiza y construye la funcion de la Gráfica</h2>
@@ -92,7 +96,7 @@
     </xml>
     
     <script>
-        // Resto del código JavaScript...
+        //  Definicion de los retos que se le pondran al alumno
         const retos = [
             {
                 formula: 'x + 4',
@@ -127,15 +131,15 @@
                 bloques: '<block type="math_arithmetic"><field name="OP">ADD</field><value name="A"><block type="math_arithmetic"><field name="OP">POWER</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_number"><field name="NUM">3</field></block></value></block></value><value name="B"><block type="math_number"><field name="NUM">2</field></block></value></block>'
             },
             {
-                formula: 'x - 5 / x',
+                formula: '(x - 5) / x',
                 nombre: 'Función Racional',
                 plotXMin: -10, plotXMax: 10,
                 viewXMin: -10, viewXMax: 10,
                 viewYMin: -20, viewYMax: 20,
                 bloques: '<block type="math_arithmetic"><field name="OP">MINUS</field><value name="A"><block type="graph_get_x"></block></value><value name="B"><block type="math_arithmetic"><field name="OP">DIVIDE</field><value name="A"><block type="math_number"><field name="NUM">5</field></block></value><value name="B"><block type="graph_get_x"></block></value></block></value></block>'
             }
-        ];
-
+        ];   //  Fin de la definicion de los retos
+         //  ------------------------------------------------Variables globales
         let retoActual = 0;
         let retosCompletados = 0;
         let workspace = null;
@@ -148,15 +152,19 @@
         let pistaModal;
         let pistaTabla;
         let opcionesModal;
+        // ---------------------------------------------------fin de variables globales
         
+        //  -----------------------------------Definicion del toolbox y los bloques personalizados
         const toolbox = {
             kind: 'categoryToolbox',
             contents: [
-                { kind: 'category', name: 'Matemáticas', colour: '%{BKY_MATH_HUE}', contents: [{ kind: 'block', type: 'math_number' }, { kind: 'block', type: 'math_arithmetic' }, { kind: 'block', type: 'math_single' }, { kind: 'block', type: 'math_trig' }, { kind: 'block', type: 'math_constant' }, { kind: 'block', type: 'math_fraction' }] },
+                { kind: 'category', name: 'Matemáticas', colour: '%{BKY_MATH_HUE}', contents: [{ kind: 'block', type: 'math_number' }, { kind: 'block', type: 'math_arithmetic' },  { kind: 'block', type: 'math_single' }, { kind: 'block', type: 'math_fraction' }] },
                 { kind: 'category', name: 'Variables', colour: '%{BKY_VARIABLES_HUE}', contents: [{ kind: 'block', type: 'graph_get_x' }] }
                     ],
         };
+        //  ---------------------------------------------------Fin del toolbox y bloques personalizados
 
+        //  ---------------------------------------------------Definicion de los bloques personalizados iniciales de Blockly
         Blockly.defineBlocksWithJsonArray([
             { type: 'graph_get_x', message0: 'x', output: 'Number', colour: Blockly.Msg['VARIABLES_HUE'] },
             { type: 'graph_set_y1', message0: 'y = %1', args0: [{ type: 'input_value', name: 'VALUE', check: 'Number' }], colour: Blockly.Msg['VARIABLES_HUE'] },
@@ -173,7 +181,9 @@
                 helpUrl: '',
             },
         ]);
+        //  ---------------------------------------------------Fin de la definicion de los bloques personalizados iniciales de Blockly
         
+        //  ---------------------------------------------------Definicion de la generacion de codigo javascript para los bloques personalizados
         javascript.javascriptGenerator.forBlock['graph_get_x'] = function (block) { return ['x', javascript.Order.ATOMIC]; };
         javascript.javascriptGenerator.forBlock['graph_set_y1'] = function (block, generator) {
             block.setDeletable(false);
@@ -186,7 +196,12 @@
             var code = '(' + numerator + ' / ' + denominator + ')';
             return [code, javascript.Order.DIVISION];
         };
-
+        //  ---------------------------------------------------Fin de la definicion de la generacion de codigo javascript para los bloques personalizados
+        
+        
+        //  ---------------------------------------------------Funciones principales de la aplicacion
+        
+        //--------------------------------Funcion para convertir el codigo javascript a formato latex
         function formatAsLatex(code) {
             let latexCode = code.replace(/^y1\s*=\s*/, '').replace(/;$/, '');
             latexCode = latexCode.replace(/Math.pow\(([^,]+),\s*2\)/g, '$1^2');
@@ -195,7 +210,7 @@
             latexCode = latexCode.replace(/\((\d+)\s*\/\s*(\d+)\)/g, '\\frac{$1}{$2}');
             return `$$y = ${latexCode}$$`;
         }
-
+        //--------------------------------Funcion para actualizar la visualizacion de la funcion en formato latex
         function updateFunctionDisplay() {
             const code = javascript.javascriptGenerator.workspaceToCode(workspace);
             const latex = formatAsLatex(code);
@@ -203,7 +218,7 @@
             displayElement.innerHTML = latex;
             MathJax.typesetPromise([displayElement]);
         }
-
+        //--------------------------------Funcion para graficar la funcion dada un rango de x    
         function plotGraph(formula, xMin, xMax) {
             let table = [['x', 'y']];
             for (let x = xMin; x <= xMax; x = Math.round((x + 0.1) * 10) / 10) {
@@ -222,7 +237,7 @@
             if (table.length === 1) table.push([0, 0]);
             return table;
         }
-
+        //--------------------------------Funcion para evaluar si la funcion creada por el alumno es correcta
         function evaluarReto() {
             const reto = retos[retoActual];
             const formulaAlumnoRaw = javascript.javascriptGenerator.workspaceToCode(workspace);
@@ -264,7 +279,7 @@
                 messageDiv.classList.add('incorrect');
             }
         }
-        
+        //--------------------------------Funcion para cargar el siguiente reto
         function cargarSiguienteReto() {
             if (retoActual < retos.length - 1) {
                 cargarReto(retoActual + 1);
@@ -276,7 +291,7 @@
                 siguienteBtn.classList.add('hidden');
             }
         }
-
+        //--------------------------------Funcion para cargar un reto especifico
         function cargarReto(index) {
             if (index > retosCompletados) {
                 return;
@@ -311,7 +326,7 @@
             actualizarNavegacion();
             updateFunctionDisplay();
         }
-
+        //--------------------------------Funcion para actualizar la navegacion de retos
         function actualizarNavegacion() {
             const navDiv = document.getElementById('reto-nav');
             navDiv.innerHTML = '';
@@ -338,7 +353,7 @@
                 navDiv.appendChild(link);
             }
         }
-
+        //--------------------------------Funcion para mostrar la pista (tabla de valores)
         function mostrarPista() {
             const reto = retos[retoActual];
             let tablaHTML = '<table><thead><tr><th>X</th><th>Y</th></tr></thead><tbody>';
@@ -355,27 +370,28 @@
             pistaTabla.innerHTML = tablaHTML;
             pistaModal.showModal();
         }
-
+        //--------------------------------Funcion para cerrar el modal de pista
         function cerrarModalPista() {
             pistaModal.close();
         }
-
+        //--------------------------------Funcion para mostrar el modal de opciones al cargar la pagina si hay progreso guardado
         function mostrarOpciones() {
             opcionesModal.showModal();
         }
-
+        //--------------------------------Funcion para cargar el avance guardado
         function cargarAvance() {
             opcionesModal.close();
             cargarReto(retosCompletados);
         }
-
+        //--------------------------------Funcion para reiniciar el avance guardado
         function reiniciarAvance() {
             opcionesModal.close();
             localStorage.removeItem('retosCompletados');
             retosCompletados = 0;
             window.location.reload();
         }
-        
+
+        //--------------------------------Funcion de inicializacion de la aplicacion
         function init() {
             messageDiv = document.getElementById('reto-message');
             userChartContainer = document.getElementById('user-chart-container');
@@ -395,10 +411,18 @@
             workspace = Blockly.inject('blocklyDiv', {
                 media: 'https://unpkg.com/blockly@12.0.0/media/',
                 toolbox: toolbox,
-                theme: Blockly.Theme.Modern,
+                theme: Blockly.Theme.Modern, // Cambia a Blockly.Theme.Modern para el tema Modern
                 renderer: 'zelos',
                 collapse: false,
                 disable: false,
+                zoom: {
+                    controls: true,
+                    wheel: true,
+                    startScale: 1.0,
+                    maxScale: 3,
+                    minScale: 0.3,
+                    scaleSpeed: 1.2
+                },
             });
 
             const startBlockXml = document.getElementById('startBlocks');
