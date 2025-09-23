@@ -1,5 +1,207 @@
 
+/* Estilos para la Evaluación */
+.content-page {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
+.question-block {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.question-block h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.image-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.options-container label {
+    display: block;
+    margin-bottom: 10px;
+    padding: 12px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.options-container label:hover {
+    background-color: #f0f0f0;
+}
+
+.options-container input[type="radio"] {
+    margin-right: 10px;
+}
+
+.feedback {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.feedback.correct {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.feedback.incorrect {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.feedback.warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.submit-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.secondary-btn {
+    background-color: #6c757d;
+}
+
+.results-container {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    text-align: center;
+    display: none; /* Oculto por defecto */
+}
+/* Estilos del body de la portada */
+.body-index {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    color: #333;
+    margin: 0;
+    /* Usar flexbox para centrar todo el contenido */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Estilos para el encabezado de la portada */
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: fixed; /* Esto hace que el encabezado y la nav se queden fijos en la parte superior */
+    top: 0;
+    z-index: 1000; /* Asegura que la nav esté por encima de todo */
+    background: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente para la nav */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+}
+
+/* Estilos de la barra de navegación de puntos */
+.nav-dots ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 15px;
+}
+
+.nav-dots li a {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: #ccc;
+    border-radius: 50%;
+    text-indent: -9999px; /* Oculta el número sin usar texto */
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.nav-dots li a.active,
+.nav-dots li a:hover {
+    background: #007bff;
+}
+
+/* Contenedor principal de la portada */
+.main-container {
+    width: 100%;
+    max-width: 900px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Ajusta el padding-top para dejar espacio a la nav fija */
+    padding-top: 100px; 
+}
+
+/* Contenedor de logos usando Flexbox */
+.logo-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    padding: 20px 0;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.logo {
+    width: 25%;
+    height: auto;
+    max-height: 150px;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+/* Contenido de la página (Bienvenido) */
+.content-page {
+    text-align: center;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+h2 {
+    font-size: 2.5rem;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 /*ESTILOS DE PAGINA GRAFICO*/
 /* Estilos generales para la página de evaluación */
         #reto-container {

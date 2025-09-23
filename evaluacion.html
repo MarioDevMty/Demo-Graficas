@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teoría - Plataforma de Funciones</title>
+    <title>Evaluación - Gráficas de Funciones</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
     <nav class="nav-dots">
         <ul>
             <li><a href="index.html">1</a></li>
-            <li><a href="teoria.html" >2</a></li>
+            <li><a href="teoria.html">2</a></li>
             <li><a href="grafico.html">3</a></li>
             <li><a href="aplicacion.html">4</a></li>
             <li><a href="evaluacion.html" class="active">5</a></li>
@@ -20,10 +20,87 @@
 
     <main>
         <div class="content-page">
-            <h2>Evaluación de graficas de Funciones</h2>
-           <p>EVALUACIÓN</p> 
+            <h2>Evaluación de Gráficas de Funciones</h2>
+            <p>Selecciona la opción que mejor describa la gráfica de cada función. ¡Al finalizar, podrás ver tus resultados!</p>
+
+            <form id="evaluationForm">
+                <div class="question-block" id="question1">
+                    <h3>Pregunta 1: ¿Qué tipo de función es y = x + 3?</h3>
+                    <div class="image-container">
+                        <img src="assets/x+3.png" alt="Gráfica de una línea recta">
+                    </div>
+                    <div class="options-container">
+                        <label>
+                            <input type="radio" name="q1" value="A">
+                            <span>A) Lineal</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="q1" value="B">
+                            <span>B) Cuadrática</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="q1" value="C">
+                            <span>C) Cúbica</span>
+                        </label>
+                    </div>
+                    <div class="feedback" id="feedback1"></div>
+                </div>
+
+                <div class="question-block" id="question2">
+                    <h3>Pregunta 2: ¿Qué función corresponde a esta gráfica?</h3>
+                    <div class="image-container">
+                        <img src="assets/x2-1.png" alt="Gráfica de una parábola">
+                    </div>
+                    <div class="options-container">
+                        <label>
+                            <input type="radio" name="q2" value="A">
+                            <span>A) y = x + 2</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="q2" value="B">
+                            <span>B) y = x² - 1</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="q2" value="C">
+                            <span>C) y = 2x</span>
+                        </label>
+                    </div>
+                    <div class="feedback" id="feedback2"></div>
+                </div>
+                
+                <div class="question-block" id="question3">
+                    <h3>Pregunta 3: La gráfica de y = x³ + 1 tiene una forma de "S". ¿Cómo se le conoce a este tipo de función?</h3>
+                    <div class="image-container">
+                        <img src="assets/x3-1.png" alt="Gráfica de una función cúbica">
+                    </div>
+                    <div class="options-container">
+                        <label>
+                            <input type="radio" name="q3" value="A">
+                            <span>A) Racional</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="q3" value="B">
+                            <span>B) Cúbica</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="q3" value="C">
+                            <span>C) Exponencial</span>
+                        </label>
+                    </div>
+                    <div class="feedback" id="feedback3"></div>
+                </div>
+
+                <div class="submit-container">
+                    <button type="submit" class="action-btn">Revisar mis respuestas</button>
+                    <button type="button" class="action-btn secondary-btn" onclick="resetForm()">Reiniciar</button>
+                </div>
+            </form>
+            
+            <div id="results" class="results-container"></div>
         </div>
     </main>
+
+    <script src="evaluacion.js"></script>
 
 </body>
 </html>
