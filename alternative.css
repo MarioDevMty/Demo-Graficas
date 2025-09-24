@@ -1,0 +1,82 @@
+/*----------------- Estilos de la portada*------------------------------------------*/
+
+
+
+
+
+
+
+/* Contenido de la página (Bienvenido) */
+.content-page {
+    text-align: center; /* Centrar el texto */
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente para el texto */
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    margin-top: 30px;
+    animation: slideIn 1.5s ease-in-out; /* Animación de entrada */
+}
+
+h2 {
+    font-size: 2.5rem; /* Tamaño de fuente más grande */
+    color: #007bff; /* Color azul para destacar */
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.nav-instruction {
+    font-style: italic;
+    color: #666;
+    margin-top: 20px;
+}
+
+/* Estilos para la barra de navegación */
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: fixed; /* Posición fija en la parte superior */
+    top: 20px;
+    z-index: 1000; /* Asegurar que la barra de navegación esté por encima de todo */
+    animation: fadeInDown 1s ease-in-out;
+}
+
+
+.nav-dots li a {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: #ccc;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.nav-dots li a.active,
+.nav-dots li a:hover {
+    background: #007bff;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
